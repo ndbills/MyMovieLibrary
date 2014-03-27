@@ -17,7 +17,7 @@ The idea is to create a responsive front-end that consumes a RESTful web service
 
 #Framework
 
-* Backend: Flask/DJango (subject to change)
+* Backend: Flask
 * Frontend: BackboneJS + LoDashJS
 * Storage: MongoDB
 
