@@ -5,7 +5,7 @@ from flask.ext.wtf import Form, TextField, validators
 
 
 class CreateForm(Form):
-    text = TextField(u'Text:', [validators.Length(min=1, max=20)])
+    text = TextField(u'Text:', [validators.Length(min=1, max=200)])
 
 
 @app.route('/')
@@ -17,7 +17,7 @@ def start():
 def printer():
     form = CreateForm(request.form)
     if request.method == 'POST' and form.validate():
-        from project.models.Printer import Printer
+        from app.models.Printer import Printer
         printer = Printer()
         printer.show_string(form.text.data)
         return render_template('printer/index.html')
