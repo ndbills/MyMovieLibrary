@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block content %}
+    <form action="{{ url_for('test') }}" method="post">
+        {{ form.csrf_token }}
+        <dl>
+            <dd>{{ form.text.label }} {{ form.text(size=20) }}
+            {% if form.error %}
+                {{ render_error(form.text) }}
+            {% endif %}
+            </dd>
+            <dd><input type="submit" value="Flash"/></dd>
+        </dl>
+    </form>
+{% endblock %}

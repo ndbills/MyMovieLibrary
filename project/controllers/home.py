@@ -10,7 +10,7 @@ class CreateForm(Form):
 
 @app.route('/')
 def start():
-    return render_template('printer/index.html')
+    return render_template('home/home.html')
 
 
 @app.route('/print', methods=['GET', 'POST'])
@@ -20,5 +20,5 @@ def printer():
         from app.models.Printer import Printer
         printer = Printer()
         printer.show_string(form.text.data)
-        return render_template('printer/index.html')
-    return render_template('printer/print.html', form=form)
+        return render_template('home/index.html')
+    return render_template('home/print.html', form=form)
