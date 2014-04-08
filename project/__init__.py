@@ -2,13 +2,14 @@
 __version__ = '0.1'
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
+from flask.ext.mongoengine import MongoEngine
+#from mongoengine import *
+#connect('my_movie_library')
+
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
+app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
+db = MongoEngine(app)
 app.debug = True
 toolbar = DebugToolbarExtension(app)
-
-#import sys, os
-#moduleDirectory = os.path.dirname(os.path.realpath(__file__))
-#sys.path.insert(0, moduleDirectory)
-
 from project.controllers import *
