@@ -2,7 +2,7 @@
 from flask import flash
 
 
-class Printer(object):
+class Test(object):
 
     def show_string(self, text):
         if text == '':
