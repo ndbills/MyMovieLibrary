@@ -16,9 +16,13 @@ def start():
 @app.route('/print', methods=['GET', 'POST'])
 def printer():
     form = CreateForm(request.form)
-    if request.method == 'POST' and form.validate():
-        from app.models.Printer import Printer
-        printer = Printer()
-        printer.show_string(form.text.data)
-        return render_template('home/index.html')
-    return render_template('home/print.html', form=form)
+    return render_template('printer/index.html')
+    # return render_template('printer/print.html', form=form)
+
+@app.route('/model-test')
+def model():
+	from project.models.User import User
+	user = User()
+	user.email = 'test@test.com'
+	print user.email
+	return render_template('printer/index.html')
