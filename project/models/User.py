@@ -5,14 +5,12 @@ class User(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.now(), required=True)
     email = db.StringField(max_length=255, required=True)
     password = db.StringField(max_length=255, required=True)
-    roles = db.ListField(db.EmbeddedDocumentField(Role.Role))
+    roles = db.ListField(db.StringField(max_length=50))
 
     def hasRole(self,role):
-        role = Role.Role(name=role)
         return role in self.roles
 
     def addRole(self,role):
-        role = Role.Role(name=role)
         self.roles.append(role)
         return self
 
