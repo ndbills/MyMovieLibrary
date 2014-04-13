@@ -10,8 +10,4 @@ def movies():
 
 @app.route('/movies/<movieId>')
 def movie_item(movieId):
-    return render_template('movies/movieItem.html')
-
-@app.route('/movies/<collectionId>/<movieId>')
-def movie_collection(collectionId, movieId):
-    return render_template('movies/movieCollection.html')
+    return render_template('movies/movie.html')
