@@ -1,5 +1,5 @@
 from project import db
-import datetime, Tag
+import datetime
 
 class Movie(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.now, required=True)

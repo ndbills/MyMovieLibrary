@@ -9,30 +9,31 @@ class Library(db.Document):
 	collection = db.ListField(db.StringField())
 	summary = db.StringField()
 
-	def get_class(self, kls ):
-		parts = kls.split('.')
-		module = ".".join(parts[:-1])
-		m = __import__( kls )
-		for comp in parts[1:]:
-			print comp
-			m = getattr(m, comp)            
-		return m
-
 	def addUnit(self,unit):
 		if self.unit == type(unit).__name__:
-			self.collection.append("%s" % unit.id)
+			value = unit[self.lookup_attribute]
+			if value is not None and value not in self.collection:
+				self.collection.append("%s" % value)
+			else:
+				return self	
 		else:
 			raise Exception("Cannot add %s to Library of %s" % (type(unit).__name__,self.unit))    		
 		return self
 
 	# @param index --represents the index in the Library collection of the object
-	def getUnit(self, index):
+	def hydrateUnit(self, index):
 		if index < 0 or index > self.collection.count:
 			raise Exception("Invalid index for Library %s" % self.name)
 		attr = {}
 		attr[self.lookup_attribute] = self.collection[index]
-		print attr
-		# m = get_class("project.models.%s"%self.unit)
 		model =  getattr(sys.modules["project.models.%s"%self.unit], self.unit)
-		# return model(attr)
 		return model(**model._get_collection().find_one(**attr))
+
+	def hydrateList(self):
+		hydratedCollection = []
+		model =  getattr(sys.modules["project.models.%s"%self.unit], self.unit)
+		attr = {}
+		for index, hash_value in self.collection:
+			attr[self.lookup_attribute] = self.collection[index]
+			hydratedCollection.append(model(**model._get_collection().find_one(**attr)))
+		return hydratedCollection	
