@@ -46,7 +46,7 @@ class Library(db.Document):
 		keyword   String: keyword to search for
 		exclude   List: list of attributes to exclude from the search
 		heirarchy List: order that matches should be returned 
-		(first matches returned are always matches of multiple categories) not quite implemented yet
+		(first matches returned are always matches of multiple categories)
 
 		Return List of unique matches ordered by heirarchy if provided else by attribute order of object
 		"""
@@ -56,7 +56,7 @@ class Library(db.Document):
 		model_attributes = model.__dict__['_db_field_map'].keys()
 		model_attributes = self.diff(model_attributes,exclude)
 		if len(heirarchy) > 0:
-			model_attributes = self.ordered_intersect(heirarchy,model_attributes)
+			model_attributes = self.ordered_union(heirarchy,model_attributes)
 		
 		result = []
 		for attr in model_attributes:
@@ -71,11 +71,10 @@ class Library(db.Document):
 				elif isinstance(value,basestring) and keyword.lower() in value.lower():
 					result[index].append(unit)
 
-		c = copy.deepcopy(result)
 		finish_result = []
-		for index,r in enumerate(result[:len(result)-1]):
+		for index,r in enumerate(result[:-1]):
 			for val in r:
-				for s in c[index:]:
+				for s in result[index:]:
 					if val in s:
 						if val not in finish_result:
 							finish_result.append(val)
@@ -95,3 +94,8 @@ class Library(db.Document):
 	def ordered_intersect(a, b):
 		b = set(b)
 		return [aa for aa in a if aa in b]
+
+	@staticmethod
+	def ordered_union(a, b):
+		a.extend(Library.diff(b,a))
+		return a
