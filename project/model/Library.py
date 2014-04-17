@@ -1,11 +1,11 @@
 from project import db
-import User, sys
+import User, sys, copy
 
 class Library(db.Document):
 	user = db.ReferenceField(User.User)
 	unit = db.StringField(max_length=50) #what Document the Library's collection relates to 
 	name = db.StringField(max_length=100, unique_with=['user','unit']) #name of the Library
-	lookup_attribute = db.StringField(default='_id')
+	lookup_attribute = db.StringField(default='id')
 	collection = db.ListField(db.StringField())
 	summary = db.StringField()
 
@@ -26,14 +26,72 @@ class Library(db.Document):
 			raise Exception("Invalid index for Library %s" % self.name)
 		attr = {}
 		attr[self.lookup_attribute] = self.collection[index]
-		model =  getattr(sys.modules["project.models.%s"%self.unit], self.unit)
-		return model(**model._get_collection().find_one(**attr))
+		model =  getattr(sys.modules["project.model.%s"%self.unit], self.unit)
+		return model.objects(**attr).first()
 
 	def hydrateList(self):
 		hydratedCollection = []
-		model =  getattr(sys.modules["project.models.%s"%self.unit], self.unit)
-		attr = {}
-		for index, hash_value in self.collection:
+		model =  getattr(sys.modules["project.model.%s"%self.unit], self.unit)
+		for index, hash_value in enumerate(self.collection):
+			attr = {}
 			attr[self.lookup_attribute] = self.collection[index]
-			hydratedCollection.append(model(**model._get_collection().find_one(**attr)))
-		return hydratedCollection	
+			unit = model.objects(**attr).first()
+			hydratedCollection.append(unit)
+		return hydratedCollection
+
+	def searchList(self,keyword,exclude =[] ,heirarchy = []):
+		"""
+		Searches the collection of this library for matches to the keyword
+
+		keyword   String: keyword to search for
+		exclude   List: list of attributes to exclude from the search
+		heirarchy List: order that matches should be returned 
+		(first matches returned are always matches of multiple categories) not quite implemented yet
+
+		Return List of unique matches ordered by heirarchy if provided else by attribute order of object
+		"""
+		import datetime
+		hydratedCollection = self.hydrateList()
+		model =  getattr(sys.modules["project.model.%s"%self.unit], self.unit)
+		model_attributes = model.__dict__['_db_field_map'].keys()
+		model_attributes = self.diff(model_attributes,exclude)
+		if len(heirarchy) > 0:
+			model_attributes = self.ordered_intersect(heirarchy,model_attributes)
+		
+		result = []
+		for attr in model_attributes:
+			result.append([]);
+		for unit in hydratedCollection:
+			for index,attr in enumerate(model_attributes):
+				value = unit[attr]
+				if isinstance(value, datetime.datetime):
+					value = value.isoformat()
+				if isinstance(value,list) and keyword.lower() in (val.lower() for val in value): 
+					result[index].append(unit)
+				elif isinstance(value,basestring) and keyword.lower() in value.lower():
+					result[index].append(unit)
+
+		c = copy.deepcopy(result)
+		finish_result = []
+		for index,r in enumerate(result[:len(result)-1]):
+			for val in r:
+				for s in c[index:]:
+					if val in s:
+						if val not in finish_result:
+							finish_result.append(val)
+		
+		for r in result:
+			additions = self.diff(r,finish_result)
+			finish_result.extend(additions)
+
+		return finish_result	
+
+	@staticmethod
+	def diff(a, b):
+		b = set(b)
+		return [aa for aa in a if aa not in b]
+
+	@staticmethod
+	def ordered_intersect(a, b):
+		b = set(b)
+		return [aa for aa in a if aa in b]

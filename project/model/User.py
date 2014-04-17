@@ -8,12 +8,6 @@ class User(db.Document):
 	password = db.StringField(max_length=255, required=True)
 	roles = db.ListField(db.StringField(max_length=50))
 
-	# def __init__(self, email, password):
-	# 	super(User,self).__init__(email=email, password=password)
-	# 	self.email = email
-	# 	self.salt = str(random.getrandbits(128))
-	# 	self.password = hashlib.sha224(self.salt.join(password)).hexdigest()
-
 	def hasRole(self,role):
 		return role in self.roles
 

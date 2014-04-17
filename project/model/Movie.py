@@ -10,3 +10,9 @@ class Movie(db.Document):
     def addTag(self,tag):
         self.tags.append(tag)
         return self
+
+    def __str__(self):
+    	return self.title
+
+    def __repr__(self):
+    	return self.__str__()    
