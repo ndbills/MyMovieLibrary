@@ -8,8 +8,14 @@ class Movie(db.Document):
     tags = db.ListField(db.StringField(max_length=50))
 
     def addTag(self,tag):
-        self.tags.append(tag)
+    	if tag not in self.tags:
+        	self.tags.append(tag)
         return self
+
+    def removeTag(self,tag):
+    	if tag in self.tags:
+        	self.tags.remove(tag)
+        return self    
 
     def __str__(self):
     	return self.title

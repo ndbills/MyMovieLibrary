@@ -12,7 +12,18 @@ class User(db.Document):
 		return role in self.roles
 
 	def addRole(self,role):
-		self.roles.append(role)
+		if role not in self.roles:
+			self.roles.append(role)
+		return self
+
+	def removeRole(self,role):
+		if role in self.roles:
+			self.roles.remove(role)
+		return self	
+
+	def changePassword(self,password):
+		self.password =	hashlib.sha224(self.salt.join(password)).hexdigest()
+		self.save()
 		return self
 
 	@staticmethod
