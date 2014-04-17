@@ -20,6 +20,17 @@ class Library(db.Document):
 			raise Exception("Cannot add %s to Library of %s" % (type(unit).__name__,self.unit))    		
 		return self
 
+	def removeUnit(self,unit):
+		if self.unit == type(unit).__name__:
+			value = unit[self.lookup_attribute]
+			if value is not None and value in self.collection:
+				self.collection.remove("%s" % value)
+			else:
+				return self	
+		else:
+			raise Exception("Cannot remove %s from Library of %s" % (type(unit).__name__,self.unit))    		
+		return self
+
 	# @param index --represents the index in the Library collection of the object
 	def hydrateUnit(self, index):
 		if index < 0 or index > self.collection.count:
