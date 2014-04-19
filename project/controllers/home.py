@@ -16,9 +16,24 @@ def start():
 @app.route('/print', methods=['GET', 'POST'])
 def printer():
     form = CreateForm(request.form)
-    if request.method == 'POST' and form.validate():
-        from app.models.Printer import Printer
-        printer = Printer()
-        printer.show_string(form.text.data)
-        return render_template('home/index.html')
-    return render_template('home/print.html', form=form)
+    return render_template('printer/index.html')
+    # return render_template('printer/print.html', form=form)
+
+@app.route('/test', methods=['GET', 'POST'])
+def model():
+    from project.models.User import User
+    from project.models.Library import Library
+    from project.models.Movie import Movie
+    User.objects().delete()
+    Library.objects().delete()
+    Movie.objects().delete()
+    
+    user = User(email='test@test.com', password='password').save()
+    testCollection = Library( user=user, unit='Movie', name='Action').save()
+    movie = Movie(title="SpiderMan",summary="SpiderMan gets the girl and saves the day").save()
+    movie.addTag('action').save()
+    user.addRole('kangaroo').save()
+    testCollection.addUnit(movie).save()
+    m = testCollection.getUnit(0)
+    print m.title
+    return render_template('printer/index.html')
