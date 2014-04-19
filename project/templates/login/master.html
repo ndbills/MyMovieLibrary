@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+{% block content %}
+	<!-- Login -->
+	<div class="col-xs-6 col-md-6">
+		<div class="col-sm-offset-3 col-sm-12">
+			<h3>Login</h3>
+		</div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="userEmail" class="col-sm-3 control-label">Email</label>
+                <div class="col-xs-9 col-md-6">
+                    <input type="email" class="form-control" id="userEmail" placeholder="Email address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="userPassword" class="col-sm-3 control-label">Password</label>
+                <div class="col-xs-9 col-md-6">
+                    <input type="password" class="form-control" id="userPassword" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sign-up -->
+    <div class="col-xs-6 col-md-6">
+		<div class="col-sm-offset-3 col-sm-12">
+			<h3>Sign-up</h3>
+		</div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="userEmail" class="col-sm-3 control-label">Email</label>
+                <div class="col-xs-9 col-md-6">
+                    <input type="email" class="form-control" id="userEmail" placeholder="Email address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="userPassword" class="col-sm-3 control-label">Password</label>
+                <div class="col-xs-9 col-md-6">
+                    <input type="password" class="form-control" id="userPassword" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default">Sign up</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

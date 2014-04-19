@@ -12,7 +12,6 @@ class CreateForm(Form):
 def start():
     return render_template('home/home.html')
 
-
 @app.route('/print', methods=['GET', 'POST'])
 def printer():
     form = CreateForm(request.form)
