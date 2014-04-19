@@ -36,20 +36,22 @@
                                 <li><a href="https://github.com/ndbills/MyMovieLibrary/" target="_blank">GitHub</a></li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="#">Login</a></li>
+                                <li><a href="{{ url_for('login') }}">Login</a></li>
                                 <li><a href="#">Sign-up</a></li>
                             </ul>
                         </div><!-- /.navbar-collapse -->
                     </div><!-- /.container-fluid -->
                 </nav><!-- end navbar -->
 
-                {% block content %}{% endblock %}
+                <div class="row">
+                    {% block content %}{% endblock %}
+                </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-body">
-                        Open Source by Brian Wood & Nathan Bills, 2014
+                        <div class="panel-body">
+                            Open Source by Brian Wood & Nathan Bills, 2014
+                        </div>
                     </div>
-                </div>
             </div>
 
 
