@@ -1,5 +1,5 @@
 from project import db
-import User, sys, copy
+import User, sys, copy, Group
 
 class Library(db.Document):
 	user = db.ReferenceField(User.User)
@@ -50,7 +50,7 @@ class Library(db.Document):
 			hydratedCollection.append(unit)
 		return hydratedCollection
 
-	def searchList(self,keyword,exclude =[] ,heirarchy = []):
+	def searchCollection(self,keyword,exclude =[] ,heirarchy = []):
 		"""
 		Searches the collection of this library for matches to the keyword
 
@@ -69,7 +69,7 @@ class Library(db.Document):
 		if len(heirarchy) > 0:
 			model_attributes = self.ordered_union(heirarchy,model_attributes)
 		
-		result = []
+		result = [[]]
 		for attr in model_attributes:
 			result.append([]);
 		for unit in hydratedCollection:
@@ -81,6 +81,11 @@ class Library(db.Document):
 					result[index].append(unit)
 				elif isinstance(value,basestring) and keyword.lower() in value.lower():
 					result[index].append(unit)
+				groups = Group.Group.objects(tags=keyword)
+				for group in groups:
+					if self.similar(group.tags,value):
+						result[-1].append(unit)
+						break
 
 		finish_result = []
 		for index,r in enumerate(result[:-1]):
@@ -110,3 +115,16 @@ class Library(db.Document):
 	def ordered_union(a, b):
 		a.extend(Library.diff(b,a))
 		return a
+
+	@staticmethod
+	def similar(a,b):
+		for val in a:
+			if val in b:
+				return True
+		return False
+
+	def __str__(self):
+		return "Library {%s-%s}" % (self.name, self.unit)
+
+	def __repr__(self):
+		return self.__str__()
