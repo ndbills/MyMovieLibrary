@@ -43,7 +43,13 @@ class User(db.Document):
 		if user.password == password:
 			return user
 		else:
-			raise Exception('Invalid credentials supplied');  
+			return None
+
+	def __str__(self):
+		return self.email
+
+	def __repr__(self):
+		return {'created': self.created, 'email': self.email, 'roles': self.roles, 'id':str(self.id)}
 
 	meta = {
 		'allow_inheritance': True,
