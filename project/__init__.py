@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
-from flask import Flask, session, redirect, url_for
+from functools import wraps
+from flask import Flask, session, redirect, url_for, request
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
 
@@ -9,15 +10,17 @@ app.config['SECRET_KEY'] = 'random'
 app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
 # app.config["MONGODB_SETTINGS"] = {'DB': "my_movie_library",
 								   # 'host': '192.168.1.89'}
-app.debug = True
-toolbar = DebugToolbarExtension(app)
-db = MongoEngine(app)
-app.debug = True
+# app.debug = True
 # toolbar = DebugToolbarExtension(app)
-def security(role):
+db = MongoEngine(app)
+# app.debug = True
+# toolbar = DebugToolbarExtension(app)
+def security(role=None):
 	def wrapper(func):
-		@wraps(f)
+		@wraps(func)
 		def security_check(*args,**kwargs):
+			if role == None:
+				return func(*args,**kwargs);
 			if isinstance(role, list):
 				if len(role) == 0:
 					return func(*args,**kwargs);

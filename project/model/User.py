@@ -2,7 +2,7 @@ from project import db
 import datetime, hashlib, random
 
 class User(db.Document):
-	created_at = db.DateTimeField(default=datetime.datetime.now(), required=True)
+	created = db.DateTimeField(default=datetime.datetime.now(), required=True)
 	email = db.StringField(max_length=255, required=True, unique=True)
 	salt = db.StringField(max_length=255, required=True)
 	password = db.StringField(max_length=255, required=True)
@@ -38,7 +38,7 @@ class User(db.Document):
 	def validateUser(email, password):
 		user = User.objects(email=email).first()
 		if user == None:
-			raise Exception('Invalid credentials supplied');
+			return None
 		password = hashlib.sha224(user.salt.join(password)).hexdigest()
 		if user.password == password:
 			return user
