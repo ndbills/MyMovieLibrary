@@ -6,4 +6,4 @@ from flask.ext.wtf import Form, TextField, validators
 @app.route('/loaned')
 @security('user')
 def loaned(user=None):
-	return render_template('loan/master.html')
+	return render_template('loan/master.html', user=user)

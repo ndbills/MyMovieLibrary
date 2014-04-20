@@ -2,5 +2,37 @@
 {% block content %}
 	<div class="col-sm-12">
 		<h3>Movies Loaned Out</h3>
+		<table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <td>Movie</td>
+                    <td>Borrower</td>
+                    <td>Date Borrowed</td>
+                    <td>Due Date</td>
+                    <td>Options</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>The Bourne Identity</p>
+                    </td>
+                    <td>
+                        <p>Brian Wood</p>
+                    </td>
+                    <td>
+                        <p>Thur, April 17, 2014/p>
+                    </td>
+                    <td>
+                    	<p>Thur, May 1, 2014</p>
+                	</td>
+                    <td>
+                        <button class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-hand-down"></span> Return
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 	</div>
 {% endblock %}
