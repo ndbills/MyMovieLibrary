@@ -38,12 +38,12 @@ class User(db.Document):
 	def validateUser(email, password):
 		user = User.objects(email=email).first()
 		if user == None:
-			raise Exception('Invalid credentials supplied');
+			retun None
 		password = hashlib.sha224(user.salt.join(password)).hexdigest()
 		if user.password == password:
 			return user
 		else:
-			raise Exception('Invalid credentials supplied');  
+			return None;
 
 	meta = {
 		'allow_inheritance': True,
