@@ -21,4 +21,4 @@ class Movie(db.Document):
     	return self.title
 
     def __repr__(self):
-    	return self.__str__()    
+    	return self.__dict__    
