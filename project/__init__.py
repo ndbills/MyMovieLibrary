@@ -4,6 +4,9 @@ from functools import wraps
 from flask import Flask, session, redirect, url_for, request
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
+import sys
+
+sys.path.append('../pytmdb3/')
 
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
