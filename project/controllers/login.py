@@ -13,7 +13,6 @@ def login():
 		password = request.form['password']
 	
 		user = User.validateUser(email, password)
-		print 'here'
 		
 		if user is not None:
 			session['user'] = user.toJSON()
@@ -51,3 +50,9 @@ def signup():
 			error = "The passwords you entered did not match. Please try again."
 			return render_template('login/signup.html', error=error, email=email)
 	return render_template('login/signup.html')
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+	if 'user' in session:
+		session.pop('user')
+	return redirect(url_for('start'))	
