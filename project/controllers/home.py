@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from project import app
+from project import app, security
 from flask import render_template, request
 from flask.ext.wtf import Form, TextField, validators
 
@@ -9,6 +9,7 @@ class CreateForm(Form):
 
 
 @app.route('/')
+@security()
 def start():
     return render_template('home/home.html')
 
