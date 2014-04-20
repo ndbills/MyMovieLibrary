@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+{% block content %}
+    <!-- Sign-up -->
+    <div class="col-sm-12">
+        <div class="col-xs-6 col-md-6">
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+    		<div class="col-sm-offset-3 col-sm-12">
+    			<h3>Sign-up</h3>
+    		</div>
+            <form class="form-horizontal" role="form" method="post" action="{{ url_for('signup') }}">
+                <div class="form-group">
+                    <label for="userEmail" class="col-sm-3 control-label">Email</label>
+                    <div class="col-xs-9 col-md-6">
+                        <input type="email" class="form-control" id="userEmail" name="email" placeholder="Email address">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword" class="col-sm-3 control-label">Password</label>
+                    <div class="col-xs-9 col-md-6">
+                        <input type="password" class="form-control" id="userPassword" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userPasswordConfirm" class="col-sm-3 control-label">Confirm Password</label>
+                    <div class="col-xs-9 col-md-6">
+                        <input type="password" class="form-control" id="userPasswordConfirm" name="passwordConfirm" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="submit" class="btn btn-default">Sign up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

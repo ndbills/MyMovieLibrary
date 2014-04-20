@@ -29,3 +29,18 @@ The idea is to create a responsive front-end that consumes a RESTful web service
 * Public lists (allow your whole neighborhood to see and request to borrow your movies)
 * Movie Reviews for a movie
 * Google Analytics
+
+#Dependencies
+
+* MongoDB
+* https://github.com/wagnerrp/pytmdb3/
+
+#Setup
+
+- Clone this directory
+- in the same parent folder you cloned this directory clone the following dependency https://github.com/wagnerrp/pytmdb3/
+- run the command `pip install -r requirements.txt`
+- update the `__init__.py` in the project folder to point to your mongodb server
+- start your mongodb server if it isn't running already
+- run the `python runserver.py` in the MyMovieLibrary directory
+- the application should be running on localhost:8080

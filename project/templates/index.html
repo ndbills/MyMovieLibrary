@@ -35,21 +35,26 @@
                             <ul class="nav navbar-nav">
                                 <li><a href="https://github.com/ndbills/MyMovieLibrary/" target="_blank">GitHub</a></li>
                             </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="#">Login</a></li>
-                                <li><a href="#">Sign-up</a></li>
-                            </ul>
+
+                            {% block usernav %}
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                                    <li><a href="{{ url_for('signup') }}">Sign-up</a></li>
+                                </ul>
+                            {% endblock %}
                         </div><!-- /.navbar-collapse -->
                     </div><!-- /.container-fluid -->
                 </nav><!-- end navbar -->
 
-                {% block content %}{% endblock %}
+                <div class="row">
+                    {% block content %}{% endblock %}
+                </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-body">
-                        Open Source by Brian Wood & Nathan Bills, 2014
+                        <div class="panel-body">
+                            Open Source by Brian Wood & Nathan Bills, 2014
+                        </div>
                     </div>
-                </div>
             </div>
 
 
@@ -58,17 +63,8 @@
             <!-- Include all compiled plugins (below), or include individual files as needed -->
             <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
 
-
-            <!--<h1>Flask MVC Boilerplate</h1>
-            {#{% for message in get_flashed_messages() %}
-                <div class="flash">{{ message }}</div>
-            {% endfor %}
-            {% macro render_error(field) %}
-                {% if field.errors %}
-                    {% for error in field.errors %}<span class='error'>{{ error }}</span>{% endfor %}
-                {% endif %}
-            {% endmacro %}
-            {% block body %}{% endblock %}#}-->
+            {% block javascript %}
+            {% endblock %}
         </div>
     </body>
 </html>

@@ -1,0 +1,48 @@
+{% extends "usernav.html" %}
+{% block content %}
+    <div class="col-sm-12">
+        <h3>My Libraries</h3>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <td>Library</td>
+                    <td>Summary</td>
+                    <td>Movie Count</td>
+                    <td>Options</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for library in libraries %}
+                <tr class='clickable' data-name='{{ library.name }}'>
+                    <td>
+                        <a href="#">{{ library.name }}</a>
+                    </td>
+                    <td>
+                        {{ library.summary }}
+                    </td>
+                    <td>
+                        {{ library.collection|length }}
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function(){
+            var libraryPath = '{{ url_for('library', name='__lib__') }}';
+            $('.clickable').on('click',function(){
+                var libname = $(this).data('name');
+                window.document.location = libraryPath.replace('__lib__',libname);
+            })
+        })(jQuery);
+    </script>
+{% endblock %}
