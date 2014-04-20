@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+{% block usernav %}
+	<p class="navbar-text">Hello, {{ user.email }}</p>
+	<ul class="nav navbar-nav navbar-right">
+	    <li><a href="{{ url_for('libraries') }}">Libraries</a></li>
+	    <li><a href="{{ url_for('movies') }}">Movies</a></li>
+	    <li><a href="#">Loaned Out</a></li>
+	    <li><a href="#">Logout</a></li>
+	</ul>
+{% endblock %}
