@@ -21,4 +21,8 @@ class Movie(db.Document):
     	return self.title
 
     def __repr__(self):
-    	return {'created': self.created, 'title': self.title, 'summary': self.summary, 'tags': str(self.tags), 'id':str(self.id)}
+    	return str(self.toJSON())
+
+    def toJSON(self):
+        import json
+        return json.dumps({'created': self.created.isoformat(), 'title': self.title, 'summary': self.summary, 'tags': str(self.tags), 'id':str(self.id)})
