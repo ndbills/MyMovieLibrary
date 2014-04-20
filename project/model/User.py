@@ -53,6 +53,6 @@ class User(db.Document):
 
 	meta = {
 		'allow_inheritance': True,
-		'indexes': ['-created_at', 'email'],
-		'ordering': ['-created_at']
+		'indexes': ['-created', 'email'],
+		'ordering': ['-created']
 	}
