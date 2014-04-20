@@ -10,8 +10,8 @@ class CreateForm(Form):
 
 @app.route('/')
 @security()
-def start():
-    return render_template('home/home.html')
+def start(user=None):
+    return render_template('home/home.html',user=user)
 
 @app.route('/print', methods=['GET', 'POST'])
 def printer():
