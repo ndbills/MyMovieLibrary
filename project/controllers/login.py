@@ -11,11 +11,12 @@ def login():
 	if request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
-
+	
 		user = User.validateUser(email, password)
-
+		print 'here'
+		
 		if user is not None:
-			session['user'] = user.toJson()
+			session['user'] = user.toJSON()
 			return redirect(url_for('libraries'))
 		else:
 			error = "That email or password is not valid. Please check your credentials and try again."
@@ -39,12 +40,14 @@ def signup():
 				#if unique, create user
 				user = User.createUser(email, password)
 				user.addRole('user').save()
-				session['user'] = user.toJson()
+				session['user'] = user.toJSON()
 				Library(user=user, unit='Movie', name='Master').save()
 				Library(user=user, unit='Movie', name='Borrowed').save()
 				return redirect(url_for('libraries'))
+			else:
+				error = "The email provided is already in use with another account."
+				return render_template('login/signup.html', error=error, email=email)
 		else:
 			error = "The passwords you entered did not match. Please try again."
 			return render_template('login/signup.html', error=error, email=email)
-		pass
 	return render_template('login/signup.html')

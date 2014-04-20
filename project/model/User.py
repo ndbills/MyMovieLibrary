@@ -26,6 +26,10 @@ class User(db.Document):
 		self.save()
 		return self
 
+	def toJSON(self):
+		import json	
+		return json.dumps({'created': self.created.isoformat(), 'email': self.email, 'roles': self.roles, 'id':str(self.id)})	
+
 	@staticmethod
 	def createUser(email, password):
 		user = User(email=email)
@@ -50,10 +54,6 @@ class User(db.Document):
 
 	def __repr__(self):
 		return str(self.toJSON())
-
-	def toJSON(self):
-		import json	
-		return json.dumps({'created': self.created.isoformat(), 'email': self.email, 'roles': self.roles, 'id':str(self.id)})
 
 	meta = {
 		'allow_inheritance': True,

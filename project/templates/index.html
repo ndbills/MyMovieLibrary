@@ -60,7 +60,8 @@
             <!-- Include all compiled plugins (below), or include individual files as needed -->
             <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
 
-
+            {% block javascript %}
+            {% endblock %}
             <!--<h1>Flask MVC Boilerplate</h1>
             {#{% for message in get_flashed_messages() %}
                 <div class="flash">{{ message }}</div>

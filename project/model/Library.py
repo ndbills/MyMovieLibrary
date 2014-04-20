@@ -37,12 +37,13 @@ class Library(db.Document):
 			raise Exception("Invalid index for Library %s" % self.name)
 		attr = {}
 		attr[self.lookup_attribute] = self.collection[index]
-		model =  getattr(sys.modules["project.model.%s"%self.unit], self.unit)
+		model =  getattr(sys.modules["project.model.%s" % self.unit], self.unit)
 		return model.objects(**attr).first()
 
 	def hydrateList(self):
 		hydratedCollection = []
-		model =  getattr(sys.modules["project.model.%s"%self.unit], self.unit)
+		print sys.modules.keys()
+		model = getattr(sys.modules["project.model.%s" % self.unit], self.unit)
 		for index, hash_value in enumerate(self.collection):
 			attr = {}
 			attr[self.lookup_attribute] = self.collection[index]
