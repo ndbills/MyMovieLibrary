@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
 from functools import wraps
-from flask import Flask, session, redirect, url_for, request
+from flask import Flask, session, redirect, url_for, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
 import sys
@@ -49,6 +49,5 @@ def security(role=None):
 			return func(*args,**kwargs); 	
 		return security_check
 	return wrapper			
-	
 
 from project.controllers import *

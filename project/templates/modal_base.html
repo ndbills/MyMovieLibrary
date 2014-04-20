@@ -1,0 +1,80 @@
+{% set modal_body_class = modal_body_class|default ~ ' modal-body' %}
+<div class="modal fade" id="{% block form_id %}{% endblock %}-form">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="blue bigger">{% block title %}{% endblock %}</h3>
+        </div>
+        <div class="{{ modal_body_class }}">
+            <div class="alert alert-danger hide {{ self.form_id()}}-error">
+            </div>
+            {% block modal_content %}{% endblock %}
+        </div>
+        <div class="modal-footer">
+            {% block footer %}
+                {% block cancel_button %}
+                    <button class="btn btn-default" data-dismiss="modal" type="button">
+                        <i class="icon-remove"></i>
+                        {% block cancel_button_text %}Cancel{% endblock %}
+                    </button>
+                {% endblock %}
+                {% block accept_button %}
+                    <button class="btn btn-small btn-primary" id="{{ self.form_id() }}-accept" type="submit">
+                        <i class="icon-ok"></i>
+                        {% block accept_button_text %}Save Changes{% endblock %}
+                    </button>
+                {% endblock %}
+            {% endblock %}
+        </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->        
+{% block javascripts %}
+    <script type="text/javascript">
+        $(function(){
+            var $form = $(document.getElementById("{{ self.form_id() }}"));
+            var $acceptButton = $(document.getElementById("{{ self.form_id() }}-accept"));
+            $acceptButton.on('click',function(){
+                $.ajax({
+                    url: {% block ajax_url %}{% endblock %},
+                    data: $form.serialize(),
+                    method: 'POST',
+                    beforeSend: function(){
+                        $form.validate({
+                                {% block validation_rules %}
+                                 
+                                {% endblock %}  
+                            });
+
+                        return $form.valid();
+                    },
+                    success: function(data,status,jqXHR){
+                    {% block ajax_success %}
+                        if(data['response'] == 'success'){
+                            if(data['type'] == 'redirect'){
+                                window.document.location = data['path'];
+                            } else if (data['type'] == 'reload') {
+                                window.document.location.reload();
+                            }
+                        }
+                    {% endblock %}
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                    {% block ajax_fail %}
+                        response = jqXHR.responseJSON;
+                        $(".{{ self.form_id() }}-error").html(response['message']).removeClass('hide');
+                    {% endblock %}
+                    }
+                });
+            });
+            $("#{{ self.form_id() }} input").keyup(function(event){
+                if(event.keyCode == 13){
+                    $acceptButton.click();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block additional_javascripts %}
+{% endblock %}
