@@ -22,9 +22,8 @@ def test():
 
 @app.route('/test-user')
 def test_user():
-	from project.models.User import User
-	test_user = User(created_at=datetime.datetime.now(), email='test@user.org', password='password', role='admin').save()
-	print "date: %s" % test_user.created_at
+	from project.model.User import User
+	test_user = User.createUser(email='ndbills@gmail.com', password='password')
 	#check if test_user exists
 	#if yes, return a success render_template
 		#else add the user and return some other template
