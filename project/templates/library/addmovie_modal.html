@@ -11,7 +11,7 @@
 	        </form>
     	</div>
 	</div>
-	<div id="results" class="row well col-md-10 col-md-offset-1">
+	<div id="results" class="clearfix well col-md-10 col-md-offset-1">
     		Search for your movie!
 	</div>
 	<div class="hidden">
@@ -45,6 +45,8 @@
                     	listMovies($results,movies);
                     	$results.on('click','.movie-select',function(){
 							var id = $(this).data('id');
+							$('.selected').removeClass('selected');
+							$(this).addClass('selected');
 							$addForm.find('input').val(id);
 						});
                     },
@@ -63,9 +65,9 @@
 			var html = "";
 			for (var i = movies.length - 1; i >= 0; i--) {
 				movie = movies[i];
-				html += "<div class='col-md-3 movie-select' data-id='"+movie['id']+"'>";
+				html += "<div title='"+movie['title']+"' class='col-md-4 movie-select' data-id='"+movie['id']+"'>";
 				html += "<img class='img-thumbnail' src='"+movie['poster']+"'/>";
-				html += "<h3>"+movie['title']+"</h3>";
+				html += "<h6>"+movie['title']+"</h6>";
 				html += "</div>";
 			};
 			list.html(html);

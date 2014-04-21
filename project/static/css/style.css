@@ -26,3 +26,26 @@ html,body {
 .adjust-left {
   padding-right: 5%;
 }
+
+.movie-select {
+  padding: 10px 15px 0px 20px;
+  border-radius: 15px;
+  background-color: darkslategray;
+  margin: 5px;
+  width: 30%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.movie-select.selected {
+  background-color: slategray;
+}
+
+.clearfix {
+  float: none !important;
+}
+
+#results {
+  max-height: 500px;
+  overflow-y: scroll; 
+}

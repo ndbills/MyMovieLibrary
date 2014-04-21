@@ -44,7 +44,14 @@ def removelibraryItem(name, index,user=None):
 	movie = library.hydrateUnit(index)
 	if not movie:
 		return jsonify(response='error',message='Unable to find the given Movie in Library %s' % library.name),404
-	library.removeUnit(movie)
+	
+	if library.name == 'Master':
+		libraries = Library.objects(user=user,unit='Movie')
+		for library in libraries:
+			library.removeUnit(movie)
+	else:		
+		library.removeUnit(movie)
+		
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
 
 @app.route('/libraries/<name>/add', methods=['POST'])
