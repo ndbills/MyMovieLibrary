@@ -29,7 +29,9 @@
                         {{ library.collection|length }}
                     </td>
                     <td>
+                        {% if library.name != 'Master' and library.name != 'Borrowed' %}
                         <button type="button" class="btn btn-default btn-small remove-library" data-name='{{ library.name }}'>Delete</button>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

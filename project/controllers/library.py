@@ -95,6 +95,9 @@ def addlibraryItem(name,user=None):
 	from project.model.Movie import Movie
 	movie = Movie.objects(tmdb_id=movie_id).first()
 	if movie:
+		if library.name != 'Master':
+			master = Library.objects(user=user,name="Master",unit='Movie').first()
+			master.addUnit(movie)
 		library.addUnit(movie)
 		return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
 
@@ -106,5 +109,8 @@ def addlibraryItem(name,user=None):
 	from project.model.Movie import Movie
 	movie = Movie.convertMovie(movie)	
 	library.addUnit(movie)
+	if library.name != 'Master':
+			master = Library(user=user,name="Master",unit='Movie').first()
+			master.addUnit(movie)
 
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
