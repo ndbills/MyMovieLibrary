@@ -4,7 +4,7 @@ import sys,os.path
 
 if os.path.exists('/var/www/pytmdb3'):
 	sys.path.append('/var/www/pytmdb3')
-elif os.path.exists('../pytmdb3')	
+elif os.path.exists('../pytmdb3'):	
 	sys.path.append('../pytmdb3/')
 
 from functools import wraps
@@ -26,7 +26,7 @@ set_key(app.config['TMDB_API_KEY'])
 
 # app.config["MONGODB_SETTINGS"] = {'DB': "my_movie_library",
 								   # 'host': '192.168.1.89'}
-app.debug = True
+# app.debug = True
 # toolbar = DebugToolbarExtension(app)
 db = MongoEngine(app)
 # app.debug = True
