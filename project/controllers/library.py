@@ -16,12 +16,24 @@ def libraries(user = None):
 @app.route('/libraries/add', methods=['POST'])
 @security('user')
 def addLibrary(user = None):
-	name = request.get['name']
+	name = request.form['name']
 	library = Library.objects(user=user,unit='Movie',name=name).first()
 	if library:
 		return jsonify(response='error',message='Library with name %s already exists' % library.name),404
 	library = Library(user=user,unit='Movie',name=name).save()
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))
+
+@app.route('/libraries/remove', methods=['POST'])
+@security('user')
+def removeLibrary(user = None):
+	name = request.form['name']
+	library = Library.objects(user=user,unit='Movie',name=name).first()
+	if not library:
+		return jsonify(response='error',message='Library requested does not exists'),404
+	if library.name == 'Master' or library.name == 'Borrowed':
+		return jsonify(response='error',message='Library %s cannot be deleted' % library.name),404
+	library.delete()
+	return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))	
 
 @app.route('/libraries/<name>')
 @security('user')
