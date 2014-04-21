@@ -1,0 +1,41 @@
+{% extends "modal_base.html" %}
+{% block modal_title %} Sign Up {% endblock %}
+{% block modal_content %}
+		<form class="form-horizontal" id="signup" role="form" method="post" action="{{ url_for('signup') }}">
+				<div class="form-group">
+					<label for="userEmail" class="col-sm-3 control-label">Email</label>
+					<div class="col-xs-9 col-md-6">
+						<input type="email" class="form-control" id="userEmail" name="email" placeholder="Email address">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="userPassword" class="col-sm-3 control-label">Password</label>
+					<div class="col-xs-9 col-md-6">
+						<input type="password" class="form-control" id="userPassword" name="password" placeholder="Password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="userPasswordConfirm" class="col-sm-3 control-label">Confirm Password</label>
+					<div class="col-xs-9 col-md-6">
+						<input type="password" class="form-control" id="userPasswordConfirm" name="passwordConfirm" placeholder="Password">
+					</div>
+				</div>
+		</form>
+{% endblock %}
+{% block accept_button_text %}Submit{% endblock %}
+{% block ajax_url %}'{{ url_for('signup') }}'{% endblock %}
+{% block form_id %}signup{% endblock %}
+{% block validation_rules %}
+rules: {
+	password: "required",
+	passwordConfirm: {
+					required: true,
+					minlength: 5,
+					equalTo: "#userPassword"
+	},
+	email: {
+	  required: true,
+	  email: true
+	}
+}
+{% endblock %}  

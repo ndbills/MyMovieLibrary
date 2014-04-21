@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
 from functools import wraps
-from flask import Flask, session, redirect, url_for, request
+from flask import Flask, session, redirect, url_for, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
 import sys
 
 sys.path.append('../pytmdb3/')
+
+from tmdb3 import set_key
+
+set_key('542606a6ccff81a0337dc370a0cbfc37')
 
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
@@ -49,6 +53,5 @@ def security(role=None):
 			return func(*args,**kwargs); 	
 		return security_check
 	return wrapper			
-	
 
 from project.controllers import *

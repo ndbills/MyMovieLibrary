@@ -1,0 +1,20 @@
+{% extends "modal_base.html" %}
+{% block modal_title %} Add Library {% endblock %}
+{% block modal_content %}
+		<form class="form-horizontal" id="addLibrary" role="form" method="post" action="{{ url_for('addLibrary') }}">
+			<div class="form-group">
+				<label for="name" class="col-sm-3 control-label">Name</label>
+				<div class="col-xs-9 col-md-6">
+					<input type="text" class="form-control" name="name" placeholder="New Library Name">
+				</div>
+			</div>
+		</form>
+{% endblock %}
+{% block accept_button_text %}Submit{% endblock %}
+{% block ajax_url %}'{{ url_for('addLibrary') }}'{% endblock %}
+{% block form_id %}addLibrary{% endblock %}
+{% block validation_rules %}
+rules: {
+	name: "required",
+}
+{% endblock %} 

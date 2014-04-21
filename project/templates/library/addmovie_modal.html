@@ -1,0 +1,83 @@
+{% extends "modal_base.html" %}
+{% block modal_title %} Add Movie {% endblock %}
+{% block modal_content %}
+	<div class="row">
+		<div class="pull-right adjust-left">
+			<form id="movieSearch "class="navbar-form" role="search" method="post" action="{{ url_for('searchMovie') }}">
+	            <div class="form-group">
+	              <input type="text" name="term" class="form-control" placeholder="Title, keyword, etc.">
+	            </div>
+	            <button type="submit" id="search-accept" class="btn btn-default">Search</button>
+	        </form>
+    	</div>
+	</div>
+	<div id="results" class="clearfix well col-md-10 col-md-offset-1">
+    		Search for your movie!
+	</div>
+	<div class="hidden">
+		<form class="hidden" id="addMovie" method="post" action="{{ url_for('addlibraryItem',name=library.name) }}">
+			<div class="form-group">
+				<div class="col-xs-9 col-md-6">
+					<input type="hidden" name="id">
+				</div>
+			</div>
+		</form>
+	</div>	
+{% endblock %}
+{% block accept_button_text %}Submit{% endblock %}
+{% block ajax_url %}'{{ url_for('addlibraryItem',name=library.name) }}'{% endblock %}
+{% block form_id %}addMovie{% endblock %}
+{% block additional_javascripts %}
+	<script type="text/javascript">
+        $(function(){
+        	var $addForm = $(document.getElementById("addMovie"));
+            var $acceptButton = $(document.getElementById("search-accept"));
+            var $form = $acceptButton.parent();
+            var $results = $(document.getElementById("results"));
+        	$acceptButton.on('click',function(event){
+        		event.preventDefault();
+                $.ajax({
+                    url: "{{ url_for('searchMovie') }}",
+                    data: $form.serialize(),
+                    method: 'POST',
+                    success: function(data,status,jqXHR){
+                    	movies = data['movies'];
+                    	listMovies($results,movies);
+                    	$results.on('click','.movie-select',function(){
+							var id = $(this).data('id');
+							$('.selected').removeClass('selected');
+							$(this).addClass('selected');
+							$addForm.find('input').val(id);
+						});
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                    	$results.html('There was an error with your search please try again')
+                    }
+                });
+            });
+            $("#search input").keyup(function(event){
+                if(event.keyCode == 13){
+                    $acceptButton.click();
+                }
+            });
+        });
+		function listMovies(list,movies){
+			var html = "";
+			for (var i = movies.length - 1; i >= 0; i--) {
+				movie = movies[i];
+				html += "<div title='"+movie['title']+"' class='col-md-4 movie-select' data-id='"+movie['id']+"'>";
+				html += "<img class='img-thumbnail' src='"+movie['poster']+"'/>";
+				html += "<h6>"+movie['title']+"</h6>";
+				html += "</div>";
+			};
+			list.html(html);
+		};
+    </script>
+{% endblock %}
+{% block validation_rules %}
+rules: {
+	id: "required",
+	errorLabelContainer: "#addMovie-error"
+}
+{% endblock %} 
+ 

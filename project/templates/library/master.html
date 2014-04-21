@@ -1,7 +1,12 @@
 {% extends "usernav.html" %}
 {% block content %}
     <div class="col-sm-12">
-        <h3>My Libraries</h3>
+        <div class="col-md-4">
+            <h3>My Libraries</h3>
+        </div>
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-default add-movie" data-toggle="modal" data-target="#addLibrary-form">Add Library</button>
+        </div>
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
@@ -24,15 +29,19 @@
                         {{ library.collection|length }}
                     </td>
                     <td>
-                        <button class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
+                        {% if library.name != 'Master' and library.name != 'Borrowed' %}
+                        <button type="button" class="btn btn-default btn-small remove-library" data-name='{{ library.name }}'>Delete</button>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block modals %}
+    {% include 'library/addlibrary_modal.html' %}
 {% endblock %}
 
 {% block javascript %}
@@ -42,7 +51,42 @@
             $('.clickable').on('click',function(){
                 var libname = $(this).data('name');
                 window.document.location = libraryPath.replace('__lib__',libname);
-            })
-        })(jQuery);
+            });
+
+            var removePath = '{{ url_for("removeLibrary") }}';
+            $('.remove-library').on('click',function(event){
+                event.stopPropagation();
+                event.preventDefault();
+                var library_name = $(this).data('name');
+                var message = "Are you sure you want to delete this Library?";
+                if(library_name == "Master" || library_name == "Borrowed"){
+                    alert("You cannot delete the "+library_name+" library.");
+                    return false;
+                }
+                if(confirm(message)){
+                    $.ajax({
+                        url: removePath,
+                        data: {name:library_name},
+                        method: 'POST',
+                        success: function(data,status,jqXHR){
+                            if(data['response'] == 'success'){
+                                if(data['type'] == 'redirect'){
+                                    window.document.location = data['path'];
+                                } else if (data['type'] == 'reload') {
+                                    window.document.location.reload();
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            response = jqXHR.responseJSON;
+                            if('message' in response){
+                                alert(response['message']);
+                            }
+                        }
+                    });
+
+                }
+            });
+        });
     </script>
 {% endblock %}

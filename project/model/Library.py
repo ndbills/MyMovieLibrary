@@ -11,9 +11,10 @@ class Library(db.Document):
 
 	def addUnit(self,unit):
 		if self.unit == type(unit).__name__:
-			value = unit[self.lookup_attribute]
+			value = str(unit[self.lookup_attribute])
 			if value is not None and value not in self.collection:
-				self.collection.append("%s" % value)
+				self.collection.append(value)
+				self.save()
 			else:
 				return self	
 		else:
@@ -22,9 +23,10 @@ class Library(db.Document):
 
 	def removeUnit(self,unit):
 		if self.unit == type(unit).__name__:
-			value = unit[self.lookup_attribute]
+			value = str(unit[self.lookup_attribute])
 			if value is not None and value in self.collection:
-				self.collection.remove("%s" % value)
+				self.collection.remove(value)
+				self.save()
 			else:
 				return self	
 		else:
@@ -34,7 +36,7 @@ class Library(db.Document):
 	# @param index --represents the index in the Library collection of the object
 	def hydrateUnit(self, index):
 		if index < 0 or index > self.collection.count:
-			raise Exception("Invalid index for Library %s" % self.name)
+			return None
 		attr = {}
 		attr[self.lookup_attribute] = self.collection[index]
 		model =  getattr(sys.modules["project.model.%s" % self.unit], self.unit)
@@ -42,7 +44,6 @@ class Library(db.Document):
 
 	def hydrateList(self):
 		hydratedCollection = []
-		print sys.modules.keys()
 		model = getattr(sys.modules["project.model.%s" % self.unit], self.unit)
 		for index, hash_value in enumerate(self.collection):
 			attr = {}

@@ -5,16 +5,17 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>My Movie Library</title>
+        <title>{% block title %}My Movie Library{% endblock %}</title>
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-slate.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
         <!-- holderJS -->
         <script src="{{ url_for('static', filename='lib/holder.js') }}"></script>
     </head>
     <body>
-        <div class="page">
+        <div id="wrap" class="page">
             <div class="container">
                 <!-- Begin the navbar -->
                 <nav class="navbar navbar-default" role="navigation">
@@ -38,8 +39,8 @@
 
                             {% block usernav %}
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                                    <li><a href="{{ url_for('signup') }}">Sign-up</a></li>
+                                    <li><a data-target="#login-form" data-toggle="modal" >Login</a></li>
+                                    <li><a data-target="#signup-form" data-toggle="modal" >Sign-up</a></li>
                                 </ul>
                             {% endblock %}
                         </div><!-- /.navbar-collapse -->
@@ -50,21 +51,28 @@
                     {% block content %}{% endblock %}
                 </div>
 
-                <div class="panel panel-default">
-                        <div class="panel-body">
-                            Open Source by Brian Wood & Nathan Bills, 2014
-                        </div>
-                    </div>
+            <div id="push"></div>
             </div>
-
-
-            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-            <!-- Include all compiled plugins (below), or include individual files as needed -->
-            <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
-
-            {% block javascript %}
-            {% endblock %}
         </div>
+        <div id="footer">
+            <div class="content">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        Open Source by Brian Wood & Nathan Bills, 2014
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
+
+        {% block javascript %}
+        {% endblock %}
+
+        {% block modals %}
+        {% endblock %}    
     </body>
 </html>

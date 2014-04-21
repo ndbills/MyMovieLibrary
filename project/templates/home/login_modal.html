@@ -1,0 +1,32 @@
+{% extends "modal_base.html" %}
+{% block modal_title %} Login {% endblock %}
+{% block modal_content %}
+		<form class="form-horizontal" id="login" role="form" method="post" action="{{ url_for('login') }}">
+			<div class="form-group">
+				<label for="userEmail" class="col-sm-3 control-label">Email</label>
+				<div class="col-xs-9 col-md-6">
+					<input type="email" class="form-control" id="userEmail" name="email" placeholder="Email address">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="userPassword" class="col-sm-3 control-label">Password</label>
+				<div class="col-xs-9 col-md-6">
+					<input type="password" class="form-control" id="userPassword" name="password" placeholder="Password">
+				</div>
+			</div>
+		</form>
+{% endblock %}
+{% block accept_button_text %}Submit{% endblock %}
+{% block ajax_url %}'{{ url_for('login') }}'{% endblock %}
+{% block form_id %}login{% endblock %}
+{% block validation_rules %}
+rules: {
+	// simple rule, converted to {required:true}
+	password: "required",
+	// compound rule
+	email: {
+	  required: true,
+	  email: true
+	}
+}
+{% endblock %} 

@@ -1,0 +1,14 @@
+{% extends "usernav.html" if user else 'index.html'%}
+{% block title %}Page Not Found{% endblock %}
+{% block content %}
+ <div style="width: 400px;margin: 0 auto;">
+  <h1>Page Not Found</h1>
+  <p>
+  	{% if message %}
+  		{{ message }}
+  	{% else %}
+  		What you were looking for is just not there.
+  	{% endif %}
+  </p>
+</div>
+{% endblock %}
