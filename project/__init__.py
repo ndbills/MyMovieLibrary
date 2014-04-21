@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
-import sys
-sys.path.append('../pytmdb3/')
+import sys, os.path
+if os.path.exists('/var/www/pytmdb'):
+	sys.path.append('var/www/pytmdb3/')
+elif os.path.exists('../pytmdb3'):
+	sys.path.append('../pytmdb3/')
+
 sys.path.append('/usr/local/lib/python2.7/dist-packages/')
 sys.path.append('/usr/lib/python2.7/dist-packages/')
 
