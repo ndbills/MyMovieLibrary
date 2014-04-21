@@ -6,24 +6,21 @@ if os.path.exists('/var/www/pytmdb'):
 elif os.path.exists('../pytmdb3'):
 	sys.path.append('../pytmdb3/')
 
-sys.path.append('/usr/local/lib/python2.7/dist-packages/')
-sys.path.append('/usr/lib/python2.7/dist-packages/')
-
 from functools import wraps
 from flask import Flask, session, redirect, url_for, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
-
 
 from tmdb3 import set_key
 
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
 app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
-app.config['SMTP_USER'] = "my.movie.library.reminder@gmail.com"
-app.config['SMTP_PASSWORD'] = "1 LikemoVies&p0pCO7n"
+app.config['SMTP_USER'] = ""
+app.config['SMTP_PASSWORD'] = ""
 app.config['SMTP_SERVER'] = "smtp.gmail.com:587"
-app.config['TMDB_API_KEY'] = "542606a6ccff81a0337dc370a0cbfc37"
+app.config['TMDB_API_KEY'] = ""
+
 set_key(app.config['TMDB_API_KEY'])
 
 # app.config["MONGODB_SETTINGS"] = {'DB': "my_movie_library",
