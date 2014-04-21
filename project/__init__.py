@@ -44,15 +44,15 @@ def security(role=None):
 				if len(role) == 0:
 					return func(*args,**kwargs);
 				elif user == None:
-					return redirect(url_for('login', next=request.url))	
+					return redirect(url_for('start', next=request.url))	
 				
 				for r in role:
 					if r in user.roles:
 						return func(*args,**kwargs); 	
-				return redirect(url_for('login', next=request.url))	
+				return redirect(url_for('start', next=request.url))	
 			
 			if user == None or role not in user.roles:
-				return redirect(url_for('login', next=request.url))	
+				return redirect(url_for('start', next=request.url))	
 			
 			return func(*args,**kwargs); 	
 		return security_check
