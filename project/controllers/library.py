@@ -110,7 +110,7 @@ def addlibraryItem(name,user=None):
 	movie = Movie.convertMovie(movie)	
 	library.addUnit(movie)
 	if library.name != 'Master':
-			master = Library(user=user,name="Master",unit='Movie').first()
+			master = Library.objects(user=user,name="Master",unit='Movie').first()
 			master.addUnit(movie)
 
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))

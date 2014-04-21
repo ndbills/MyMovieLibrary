@@ -11,6 +11,7 @@ def loaned(user=None):
 @app.route('/send-reminder', methods=['POST'])
 @security('user')
 def reminderEmail(user=None):
+	import smtplib
 	from_addr = user.email
 	to_addr = request.form['email']
 	subject = request.form['subject'] or "Movie Return Reminder"
@@ -22,6 +23,8 @@ def reminderEmail(user=None):
 	if not movie:
 		return jsonify(response='error',message='Invalid Movie given'),404
 	loan = movie.getLoan(user)
+	if not loan:
+		return jsonify(response='error',message='Invalid Movie given'),404
 	message = request.form['message'] or "The movie %s, borrowed form %s is due on %s" % (movie.title, user.email, loan.expected_return_date)
 	login = app.config['SMTP_USER']
 	password = app.config['SMTP_PASSWORD']
@@ -36,4 +39,5 @@ def reminderEmail(user=None):
 	server.starttls()
 	server.login(login,password)
 	problems = server.sendmail(from_addr, to_addr, message)
-	server.quit()   
+	server.quit() 
+	return jsonify(response='success',type="reload")
