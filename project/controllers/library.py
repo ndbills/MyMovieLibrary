@@ -13,6 +13,16 @@ def libraries(user = None):
 	libraries = Library.objects(user=user,unit='Movie')
 	return render_template('library/master.html', libraries=libraries,user=user)
 
+@app.route('/libraries/add', methods=['POST'])
+@security('user')
+def addLibrary(user = None):
+	name = request.get['name']
+	library = Library.objects(user=user,unit='Movie',name=name).first()
+	if library:
+		return jsonify(response='error',message='Library with name %s already exists' % library.name),404
+	library = Library(user=user,unit='Movie',name=name).save()
+	return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))
+
 @app.route('/libraries/<name>')
 @security('user')
 def library(name,user=None):
@@ -34,14 +44,17 @@ def libraryItem(name, index,user=None):
 		return render_template('404.html',message='Unable to find given Movie',user=user),404
 	return render_template('library/libraryItem.html',item=movie,user=user)
 
-@app.route('/libraries/<name>/remove/<int:index>', methods=['POST'])
+@app.route('/libraries/<name>/remove', methods=['POST'])
 @security('user')
-def removelibraryItem(name, index,user=None):
+def removelibraryItem(name,user=None):
 	from project.model.Movie import Movie
 	library = Library.objects(user=user,name=name,unit='Movie').first()
 	if not library:
 		return jsonify(response='error',message='Unable to find the given Library'),404
-	movie = library.hydrateUnit(index)
+	index = int(request.form['id'])
+	if not index:
+		return jsonify(response='error',message='Invalid parameters'),404
+	movie = library.hydrateUnit(index-1)
 	if not movie:
 		return jsonify(response='error',message='Unable to find the given Movie in Library %s' % library.name),404
 	
@@ -51,7 +64,7 @@ def removelibraryItem(name, index,user=None):
 			library.removeUnit(movie)
 	else:		
 		library.removeUnit(movie)
-		
+
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
 
 @app.route('/libraries/<name>/add', methods=['POST'])

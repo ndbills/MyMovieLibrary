@@ -35,5 +35,4 @@ def model():
     user.addRole('kangaroo').save()
     testCollection.addUnit(movie).save()
     m = testCollection.getUnit(0)
-    print m.title
     return render_template('printer/index.html')

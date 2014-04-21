@@ -36,9 +36,9 @@
                         </td>
                         <td>
                             <div class="btn-group-vertical">
-                              <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ movie.id }}'>Lend</button>
-                              <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ movie.id }}'>Edit</button>
-                              <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ movie.id }}'>Remove</button>
+                              <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ loop.index }}'>Lend</button>
+                              <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ loop.index }}'>Edit</button>
+                              <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
                             </div>
                         </td>
                     </tr>
@@ -55,9 +55,44 @@
         $(function(){
             var libraryPath = '{{ url_for("libraryItem", name=library.name, index="999") }}';
             $('.clickable').on('click',function(){
-                var libname = $(this).data('id');
-                window.document.location = libraryPath.replace('999',libname);
-            })
+                var movie_id = $(this).data('id');
+                window.document.location = libraryPath.replace('999',movie_id);
+            });
+
+            var removePath = '{{ url_for("removelibraryItem", name=library.name) }}';
+            $('.remove-movie').on('click',function(event){
+                var movie_id = $(this).data('id');
+                {% if library.name == 'Master' %}
+                   var message = "Removing a movie from your Master list will remove it from all other lists. Are you sure you want remove this movie? ";
+                {% else %}
+                    var message = "Are you sure you want remove this movie? ";
+                {% endif %}
+                if(confirm(message)){
+                    event.stopPropagation();
+                    event.preventDefault();
+                    $.ajax({
+                        url: removePath,
+                        data: {id:movie_id},
+                        method: 'POST',
+                        success: function(data,status,jqXHR){
+                            if(data['response'] == 'success'){
+                                if(data['type'] == 'redirect'){
+                                    window.document.location = data['path'];
+                                } else if (data['type'] == 'reload') {
+                                    window.document.location.reload();
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            response = jqXHR.responseJSON;
+                            if('message' in response){
+                                alert(response['message']);
+                            }
+                        }
+                    });
+
+                }
+            });
         });
     </script>
 {% endblock %}

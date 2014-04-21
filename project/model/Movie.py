@@ -36,7 +36,6 @@ class Movie(db.Document):
 		result = Movie()
 		result.tmdb_id = int(movie.id)
 		result.title = str(movie.title)
-		print movie.overview
 		result.summary = str(movie.overview.encode('utf-8'))
 		if movie.poster:
 			sizes = movie.poster.sizes()

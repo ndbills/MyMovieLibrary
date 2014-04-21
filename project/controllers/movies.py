@@ -22,7 +22,6 @@ def searchMovie(user=None):
 	movies = searchMovie(term)
 	if len(movies) == 0:
 		return jsonify(response='error',message='No results given'),404
-	print movies
 	results = []
 	limit = 10
 	for index in range(len(movies)):
