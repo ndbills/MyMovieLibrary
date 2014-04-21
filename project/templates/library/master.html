@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for library in libraries %}
+            {% for library in libraries if not library.name == 'Borrowed' %}
                 <tr class='clickable' data-name='{{ library.name }}'>
                     <td>
                         <a href="#">{{ library.name }}</a>

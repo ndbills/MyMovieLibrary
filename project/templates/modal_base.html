@@ -35,7 +35,9 @@
         $(function(){
             var $form = $(document.getElementById("{{ self.form_id() }}"));
             var $acceptButton = $(document.getElementById("{{ self.form_id() }}-accept"));
-            $acceptButton.on('click',function(){
+            $acceptButton.on('click',function(event){
+                event.stopPropagation();
+                event.preventDefault();
                 $.ajax({
                     url: {% block ajax_url %}{% endblock %},
                     data: $form.serialize(),
@@ -75,7 +77,16 @@
                     $acceptButton.click();
                 }
             });
+            $('[data-dismiss]').on('click',function(){
+               $('input')
+                  .not(':button, :submit, :reset, :hidden')
+                  .val('')
+                  .removeAttr('checked')
+                  .removeAttr('selected');
+                  $(".{{ self.form_id() }}-error").html('').addClass('hide');
+            });
         });
+              
     </script>
 {% endblock %}
 {% block additional_javascripts %}

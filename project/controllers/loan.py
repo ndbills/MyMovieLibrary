@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from project import app, security
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from flask.ext.wtf import Form, TextField, validators
 
 @app.route('/loaned')
@@ -41,3 +41,33 @@ def reminderEmail(user=None):
 	problems = server.sendmail(from_addr, to_addr, message)
 	server.quit() 
 	return jsonify(response='success',type="reload")
+
+@app.route('/loan-movie', methods=['POST'])
+@security('user')
+def createLoan(user=None):
+	import smtplib
+	from datetime import datetime
+	borrower = request.form['email']
+	return_date = request.form['date'] or None
+	movie_id = request.form['movie']
+	if return_date:
+		return_date = datetime.strptime(return_date, '%m/%d/%Y')
+	
+	if not movie_id:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	from project.model.Movie import Movie
+	movie = Movie.objects(id=movie_id).first()
+	if not movie:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	
+	from project.model.Loan import Loan
+	loan = Loan.objects(user=user,movie=movie).first()
+	if loan:
+		return jsonify(response='error',message='A loan already exists for this movie'),404	
+
+	loan = Loan.create(user,movie,borrower,return_date)
+	from project.model.Library import Library
+	borrowed_lib = Library.objects(user=user,unit="Movie",name="Borrowed").first()
+	borrowed_lib.addUnit(movie)
+
+	return jsonify(response='success',type="reload")	

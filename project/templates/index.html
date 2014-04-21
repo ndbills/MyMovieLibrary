@@ -8,6 +8,7 @@
         <title>{% block title %}My Movie Library{% endblock %}</title>
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ui-darkness/jquery-ui-1.10.4.custom.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-slate.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -68,6 +69,7 @@
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/jquery-ui-1.10.4.custom.min.js') }}"></script>
 
         {% block javascript %}
         {% endblock %}

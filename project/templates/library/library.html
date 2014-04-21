@@ -23,14 +23,20 @@
                     </tr>
                 {% else %}
                     {% for movie in library.hydrateList() %}
+                    {% set loan = movie.getLoan(user) %}
                         <tr class='clickable' data-id='{{ loop.index }}'>
                         <td>
                             <img src="{{ movie.poster|default('') }}" style="max-width: 200px;" alt="{{ movie.title }}">
                             <p>{{ movie.title }}</p>
                              <div class="btn-group hidden-md hidden-lg">
-                              <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ loop.index }}'>Lend</button>
-                              <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ loop.index }}'>Edit</button>
-                              <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
+                              {% if loan == None %}  
+                                <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ movie.id }}'>Lend</button>
+                              {% else %}  
+                                This movie is loaned to {{ loan.email }} and is due back on {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
+                              {% endif %}
+                              {% if library.name != "Master" or loan == None %}
+                                <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
+                              {% endif %}
                             </div>
                         </td>
                         <td>
@@ -51,9 +57,15 @@
                         </td>
                         <td class="hidden-xs">
                             <div class="btn-group-vertical">
-                              <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ loop.index }}'>Lend</button>
-                              <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ loop.index }}'>Edit</button>
-                              <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
+                              {% if loan == None %}    
+                                  <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ movie.id }}'>Lend</button>
+                              {% else %}  
+                                This movie is loaned to {{ loan.borrower_email }} and is due back on {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
+                              {% endif %}
+                              {% if library.name != "Master" or loan == None %}
+                                <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
+                              {% endif %}
+                              
                             </div>
                         </td>
                     </tr>
@@ -114,4 +126,5 @@
 
 {% block modals %}
     {% include 'library/addmovie_modal.html' %}
+    {% include 'library/loanMovie_modal.html' %}
 {% endblock %}
