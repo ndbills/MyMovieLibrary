@@ -19,7 +19,12 @@ class Movie(db.Document):
 	def removeTag(self,tag):
 		if tag in self.tags:
 			self.tags.remove(tag)
-		return self    
+		return self
+
+	def getLoan(self,user):
+		from Loan import Loan
+		loan = Loan.objects(movie=self,user=user).first()
+		return loan
 
 	def __str__(self):
 		return self.title
