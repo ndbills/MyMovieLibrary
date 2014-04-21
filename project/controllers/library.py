@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from project import app, security
-from flask import render_template, request, session, redirect, url_for
+from flask import render_template, request, session, redirect, url_for,jsonify
 from flask.ext.wtf import Form, TextField, validators
 from project.model.Library import Library
 from project.model.User import User
@@ -29,7 +29,7 @@ def libraryItem(name, index,user=None):
 	library = Library.objects(user=user,name=name,unit='Movie').first()
 	if not library:
 		return render_template('404.html',message='Unable to find given Library',user=user),404
-	movie = library.hydrateUnit(index)
+	movie = library.hydrateUnit(index-1)
 	if not movie:
 		return render_template('404.html',message='Unable to find given Movie',user=user),404
 	return render_template('library/libraryItem.html',item=movie,user=user)
@@ -40,9 +40,39 @@ def removelibraryItem(name, index,user=None):
 	from project.model.Movie import Movie
 	library = Library.objects(user=user,name=name,unit='Movie').first()
 	if not library:
-		return render_template('404.html',message='Unable to find given Library',user=user),404
+		return jsonify(response='error',message='Unable to find the given Library'),404
 	movie = library.hydrateUnit(index)
 	if not movie:
-		return render_template('404.html',message='Unable to find given Movie',user=user),404
+		return jsonify(response='error',message='Unable to find the given Movie in Library %s' % library.name),404
 	library.removeUnit(movie)
+	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
+
+@app.route('/libraries/<name>/add', methods=['POST'])
+@security('user')
+def addlibraryItem(name,user=None):
+	from project.model.Movie import Movie
+	
+	library = Library.objects(user=user,name=name,unit='Movie').first()
+	if not library:
+		return jsonify(response='error',message='Unable to find the given Library'),404
+	
+	movie_id = request.form['id']	
+	if not movie_id:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	
+	from project.model.Movie import Movie
+	movie = Movie.objects(tmdb_id=movie_id).first()
+	if movie:
+		library.addUnit(movie)
+		return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))
+
+	from tmdb3 import Movie as tmdbMovie
+	movie = tmdbMovie(movie_id)
+	if not movie:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	
+	from project.model.Movie import Movie
+	movie = Movie.convertMovie(movie)	
+	library.addUnit(movie)
+
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))

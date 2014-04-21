@@ -14,6 +14,7 @@ class Library(db.Document):
 			value = unit[self.lookup_attribute]
 			if value is not None and value not in self.collection:
 				self.collection.append("%s" % value)
+				self.save()
 			else:
 				return self	
 		else:
@@ -24,7 +25,8 @@ class Library(db.Document):
 		if self.unit == type(unit).__name__:
 			value = unit[self.lookup_attribute]
 			if value is not None and value in self.collection:
-				self.collection.remove("%s" % value).save()
+				self.collection.remove("%s" % value)
+				self.save()
 			else:
 				return self	
 		else:

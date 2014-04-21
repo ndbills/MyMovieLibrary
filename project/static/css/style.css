@@ -22,3 +22,7 @@ html,body {
       padding-right: 20px;
     }
 }
+
+.adjust-left {
+  padding-right: 5%;
+}

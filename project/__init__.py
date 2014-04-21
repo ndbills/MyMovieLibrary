@@ -8,6 +8,10 @@ import sys
 
 sys.path.append('../pytmdb3/')
 
+from tmdb3 import set_key
+
+set_key('542606a6ccff81a0337dc370a0cbfc37')
+
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
 app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
