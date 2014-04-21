@@ -49,3 +49,53 @@ html,body {
   max-height: 500px;
   overflow-y: scroll; 
 }
+
+dl {
+ width:100%;
+ overflow:hidden;
+}
+dt {
+ float:left;
+ width:50%; /* adjust the width; make sure the total of both is 100% */
+}
+dd {
+ float:left;
+ width:50%; /* adjust the width; make sure the total of both is 100% */
+
+}
+
+.rating-text {
+  margin: 0 auto;
+  width: 20px;
+  color: gold;
+}
+
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  width: 20px;
+  margin: 0 auto;
+}
+.rating > span.rated:before,
+.rating > span.rated ~ span:before {
+   content: "\2605";
+   position: absolute;
+   color: gold;
+}
+
+span.vert{
+  font-size: 22px;
+}
+
+@media (max-width: 480px) { 
+  span.vert {
+    display: inline-block;
+  }
+  .rating {
+    width: 90%;
+    display: inline-block;
+  }
+  .rating-text{
+    display: inline-block;
+  }
+}

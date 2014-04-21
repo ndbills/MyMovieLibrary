@@ -16,8 +16,8 @@ from tmdb3 import set_key
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
 app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
-app.config['SMTP_USER'] = ""
-app.config['SMTP_PASSWORD'] = ""
+app.config['SMTP_USER'] = "my.movie.library.reminder@gmail.com"
+app.config['SMTP_PASSWORD'] = "1 LikemoVies&p0pCO7n"
 app.config['SMTP_SERVER'] = "smtp.gmail.com:587"
 app.config['TMDB_API_KEY'] = "542606a6ccff81a0337dc370a0cbfc37"
 set_key(app.config['TMDB_API_KEY'])

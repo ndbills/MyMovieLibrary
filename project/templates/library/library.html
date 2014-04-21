@@ -11,9 +11,9 @@
             <thead>
                 <tr>
                     <td>Movie</td>
-                    <td>Summary</td>
                     <td>Rating</td>
-                    <td>Options</td>
+                    <td class="hidden-xs">Summary</td>
+                    <td class="hidden-xs">Options</td>
                 </tr>
             </thead>
             <tbody>
@@ -27,14 +27,29 @@
                         <td>
                             <img src="{{ movie.poster|default('') }}" style="max-width: 200px;" alt="{{ movie.title }}">
                             <p>{{ movie.title }}</p>
+                             <div class="btn-group hidden-md hidden-lg">
+                              <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ loop.index }}'>Lend</button>
+                              <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ loop.index }}'>Edit</button>
+                              <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
+                            </div>
                         </td>
                         <td>
+                            <div class='rating-text'style="">{{ movie.popularity }}</div>
+                            <div class="rating">
+                                {% set rating = 10 - movie.popularity|int %}
+                                {% for i in range(10) %}
+                                    {% if rating == i %}
+                                        <span class="vert rated">☆</span>
+                                    {% else %}
+                                        <span class="vert">☆</span>
+                                    {% endif %}    
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="hidden-xs">
                             {{ movie.summary }}
                         </td>
-                        <td>
-                            {{ movie.rating }}
-                        </td>
-                        <td>
+                        <td class="hidden-xs">
                             <div class="btn-group-vertical">
                               <button type="button" class="btn btn-default btn-small lend-movie" data-id='{{ loop.index }}'>Lend</button>
                               <button type="button" class="btn btn-default btn-small borrow-movie" data-id='{{ loop.index }}'>Edit</button>

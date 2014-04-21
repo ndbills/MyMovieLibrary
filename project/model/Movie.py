@@ -7,6 +7,7 @@ class Movie(db.Document):
 	summary = db.StringField(max_length=10000, required=True)
 	tags = db.ListField(db.StringField(max_length=50))
 	cast = db.ListField(db.StringField())
+	director = db.StringField()
 	tmdb_id = db.IntField()
 	runtime = db.IntField()
 	poster = db.StringField()
@@ -48,7 +49,7 @@ class Movie(db.Document):
 			if len(sizes) > 0:
 				medium = int(len(sizes)/2)
 				result.poster = str(movie.poster.geturl(sizes[medium]))
-		result.popularity = float(movie.popularity)
+		result.popularity = float(movie.userrating)
 		result.runtime = int(movie.runtime)
 		tags = movie.keywords
 		for tag in tags:
@@ -58,6 +59,11 @@ class Movie(db.Document):
 			result.addTag(str(genre.name.encode('utf-8')))
 		cast = movie.cast
 		for actor in cast:
-			result.cast.append("%s as %s" % (actor.name,actor.character))	
+			result.cast.append("%s:%s" % (actor.name,actor.character))	
+		crew = movie.crew
+		for person in crew:
+			job = person.job.encode('utf-8')
+			if 'director' == job.lower():
+				result.director = person.name.encode('utf-8')
 		result.save()
 		return result

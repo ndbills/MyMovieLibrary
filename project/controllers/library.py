@@ -54,7 +54,7 @@ def libraryItem(name, index,user=None):
 	movie = library.hydrateUnit(index-1)
 	if not movie:
 		return render_template('404.html',message='Unable to find given Movie',user=user),404
-	return render_template('library/libraryItem.html',item=movie,user=user)
+	return render_template('library/libraryItem.html',item=movie,user=user,library=library,index=index)
 
 @app.route('/libraries/<name>/remove', methods=['POST'])
 @security('user')

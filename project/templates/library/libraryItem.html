@@ -3,36 +3,86 @@
     <div class="col-sm-12">
         <div class="row">
             <div class="col-xs-12 col-sm-3 col-md-2">
-                <img data-src="holder.js/100%x200/sky" alt="movie title">
-                <button type="button" class="btn btn-default btn-sm">
-                    <span class="glyphicon glyphicon-pencil"></span> Edit
-                </button>
-                <button type="button" class="btn btn-warning btn-sm">
+                <img src="{{ item.poster }}" style="max-width: 180px;" alt="{{ item.title }}">
+                <h3>{{ item.title }}</h3>
+                <button type="button" class="btn btn-warning btn-sm remove-movie" data-id='{{ index }}'>
                     <span class="glyphicon glyphicon-remove"></span> Remove
                 </button>
             </div>
-
-            <div class="col-xs-12 col-sm-3 col-md-2">
-                <ul class="list-unstyled">
-                    <li>Movie Title</li>
-                    <li>Director(s)</li>
-                    <li>Actors (truncated)</li>
-                    <li>Producers</li>
-                    <li>Composer</li>
-                </ul>
+            <div class="col-md-1 hidden-sm">
+                <div class="rating-text">{{ item.popularity }}</div>
+                <div class="rating">
+                    {% set rating = 10 - item.popularity|int %}
+                    {% for i in range(10) %}
+                        {% if rating == i %}
+                            <span class="vert rated">☆</span>
+                        {% else %}
+                            <span class="vert">☆</span>
+                        {% endif %}    
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <dl>
+                  <dt>Director</dt>
+                    <dd>{{ item.director|default('No Director found')}}</dd>
+                  <dt>Actors:</dt>
+                    <dd>&nbsp;</dd>  
+                {% for data in item.cast %}
+                {% set actor = data.split(':')[0]|default('&nbsp;') %}
+                {% set character = data.split(':')[1]|default('&nbsp;') %}
+                    <dt>{{ actor }}</dt>
+                        <dd>{{ character }}</dd>
+                {% endfor %}
+                  
+                </dl>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-8">
+            <div class="col-xs-12 col-sm-5 col-md-5">
                 <h2>Summary</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget metus vitae mi interdum tristique. Integer malesuada quam tincidunt, gravida nisi vehicula, auctor mi. Morbi fermentum, neque quis adipiscing placerat, odio nunc consequat ligula, vel sagittis nisl orci id risus. Aliquam hendrerit, elit a molestie suscipit, eros tortor scelerisque odio, sit amet cursus ligula lorem et turpis. Pellentesque ante metus, suscipit id blandit eget, vehicula quis tortor. Aliquam a pharetra enim. Morbi in purus sit amet nulla egestas consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla diam nulla, iaculis lobortis varius at, auctor malesuada enim. Donec a nisl eget ligula rhoncus fermentum.</p>
+                <p>{{ item.summary }}</p>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-12">
-                <h3>Movie Reviews</h3>
-                <p>Coming Soon!</p>
-            </div>
-        </div>
     </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(function(){
+            var removePath = '{{ url_for("removelibraryItem", name=library.name) }}';
+            $('.remove-movie').on('click',function(event){
+                var movie_id = $(this).data('id');
+                {% if library.name == 'Master' %}
+                   var message = "Removing a movie from your Master list will remove it from all other lists. Are you sure you want remove this movie? ";
+                {% else %}
+                    var message = "Are you sure you want remove this movie? ";
+                {% endif %}
+                if(confirm(message)){
+                    event.stopPropagation();
+                    event.preventDefault();
+                    $.ajax({
+                        url: removePath,
+                        data: {id:movie_id},
+                        method: 'POST',
+                        success: function(data,status,jqXHR){
+                            if(data['response'] == 'success'){
+                                if(data['type'] == 'redirect'){
+                                    window.document.location = data['path'];
+                                } else if (data['type'] == 'reload') {
+                                    window.document.location.reload();
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            response = jqXHR.responseJSON;
+                            if('message' in response){
+                                alert(response['message']);
+                            }
+                        }
+                    });
+
+                }
+            });
+        });
+    </script>
 {% endblock %}
