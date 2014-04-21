@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
+import sys
+sys.path.append('../pytmdb3/')
+sys.path.append('/usr/local/lib/python2.7/dist-packages/')
+sys.path.append('/usr/lib/python2.7/dist-packages/')
+
 from functools import wraps
 from flask import Flask, session, redirect, url_for, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mongoengine import MongoEngine
-import sys
 
-sys.path.append('../pytmdb3/')
 
 from tmdb3 import set_key
 
@@ -16,7 +19,7 @@ app.config['MONGODB_SETTINGS'] = {'DB': 'my_movie_library'}
 app.config['SMTP_USER'] = ""
 app.config['SMTP_PASSWORD'] = ""
 app.config['SMTP_SERVER'] = "smtp.gmail.com:587"
-app.config['TMDB_API_KEY'] = ""
+app.config['TMDB_API_KEY'] = "542606a6ccff81a0337dc370a0cbfc37"
 set_key(app.config['TMDB_API_KEY'])
 
 # app.config["MONGODB_SETTINGS"] = {'DB': "my_movie_library",
