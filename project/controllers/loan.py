@@ -45,7 +45,6 @@ def reminderEmail(user=None):
 @app.route('/loan-movie', methods=['POST'])
 @security('user')
 def createLoan(user=None):
-	import smtplib
 	from datetime import datetime
 	borrower = request.form['email']
 	return_date = request.form['date'] or None
@@ -70,4 +69,28 @@ def createLoan(user=None):
 	borrowed_lib = Library.objects(user=user,unit="Movie",name="Borrowed").first()
 	borrowed_lib.addUnit(movie)
 
-	return jsonify(response='success',type="reload")	
+	return jsonify(response='success',type="reload")
+
+@app.route('/return-movie', methods=['POST'])
+@security('user')
+def returnMovie(user=None):
+	movie_id = request.form['id']
+	
+	if not movie_id:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	from project.model.Movie import Movie
+	movie = Movie.objects(id=movie_id).first()
+	if not movie:
+		return jsonify(response='error',message='Invalid Movie given'),404
+	
+	from project.model.Loan import Loan
+	loan = Loan.objects(user=user,movie=movie).first()
+	if not loan:
+		return jsonify(response='error',message='This movie has not been loaned out and cannot be returned'),404	
+
+	from project.model.Library import Library
+	borrowed_lib = Library.objects(user=user,unit="Movie",name="Borrowed").first()
+	borrowed_lib.removeUnit(movie)
+	loan.delete()
+
+	return jsonify(response='success',type="reload")		
