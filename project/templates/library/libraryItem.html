@@ -1,18 +1,29 @@
 {% extends "usernav.html" %}
 {% block content %}
+{% set loan = item.getLoan(user) %}
     <div class="col-sm-12">
         <div class="row">
             <div class="col-xs-12 col-sm-3 col-md-2">
                 <img src="{{ item.poster }}" style="max-width: 180px;" alt="{{ item.title }}">
                 <h3>{{ item.title }}</h3>
-                <button type="button" class="btn btn-warning btn-sm remove-movie" data-id='{{ index }}'>
-                    <span class="glyphicon glyphicon-remove"></span> Remove
-                </button>
+                <div class="btn-group">
+                              {% if loan == None %}    
+                                  <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ item.id }}'>Lend</button>
+                              {% else %}  
+                                Loaned to: {{ loan.borrower_email }}<br/>
+                                Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
+                                <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ item.id }}'>Return</button>
+                              {% endif %}
+                              {% if library.name != "Master" or loan == None %}
+                                <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ index }}'>Remove</button>
+                              {% endif %}
+                              
+                            </div>
             </div>
             <div class="col-md-1 hidden-sm">
                 <div class="rating-text">{{ item.popularity }}</div>
                 <div class="rating">
-                    {% set rating = 10 - item.popularity|int %}
+                    {% set rating = 10 - item.popularity|round %}
                     {% for i in range(10) %}
                         {% if rating == i %}
                             <span class="vert rated">☆</span>
@@ -22,7 +33,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="col-xs-12 col-sm-4 col-md-4 well">
                 <dl>
                   <dt>Director</dt>
                     <dd>{{ item.director|default('No Director found')}}</dd>
@@ -83,6 +94,42 @@
 
                 }
             });
+
+            var returnPath = '{{ url_for("returnMovie") }}';
+            $('.return-movie').on('click',function(event){
+                var movie_id = $(this).data('id');
+                var message = "Are you sure you want return this movie? ";
+                if(confirm(message)){
+                    event.stopPropagation();
+                    event.preventDefault();
+                    $.ajax({
+                        url: returnPath,
+                        data: {id:movie_id},
+                        method: 'POST',
+                        success: function(data,status,jqXHR){
+                            if(data['response'] == 'success'){
+                                if(data['type'] == 'redirect'){
+                                    window.document.location = data['path'];
+                                } else if (data['type'] == 'reload') {
+                                    window.document.location.reload();
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            response = jqXHR.responseJSON;
+                            if('message' in response){
+                                alert(response['message']);
+                            }
+                        }
+                    });
+
+                }
+            });
         });
     </script>
+{% endblock %}
+
+{% block modals %}
+    {% include 'library/loanMovie_modal.html' %}
+    {% include 'library/reminder_modal.html' %}
 {% endblock %}
