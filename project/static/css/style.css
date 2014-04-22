@@ -94,7 +94,7 @@ span.vert{
   font-size: 22px;
 }
 
-@media (max-width: 480px) { 
+@media (max-width: 568px) { 
   span.vert {
     display: inline-block;
   }
