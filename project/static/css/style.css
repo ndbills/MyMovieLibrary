@@ -86,6 +86,10 @@ dd {
    color: gold;
 }
 
+#lib_paginate {
+  /*margin-top: -20px;*/
+}
+
 span.vert{
   font-size: 22px;
 }

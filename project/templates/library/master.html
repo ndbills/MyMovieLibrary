@@ -7,7 +7,9 @@
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-default add-movie" data-toggle="modal" data-target="#addLibrary-form">Add Library</button>
         </div>
-        <table class="table table-striped table-hover">
+        <div class="full_width" style="margin-top:4em;">
+        <div class="dataTables_wrapper" role="grid">
+        <table id="lib" style="margin-top:4em;" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <td>Library</td>
@@ -38,6 +40,8 @@
             </tbody>
         </table>
     </div>
+    </div>
+    </div>
 {% endblock %}
 
 {% block modals %}
@@ -45,8 +49,15 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{{ url_for('static', filename='lib/jquery.dataTables.min.js') }}"></script>
     <script>
         $(function(){
+            $('#lib').dataTable({
+                "sDom": '<"#search-control.pull-right"f>rt<"pull-right"p><"clear">',
+                "bJQueryUI": true,
+                "sPaginationType": "bootstrap",
+                "sEmptyTable": false
+            });
             var libraryPath = '{{ url_for('library', name='__lib__') }}';
             $('.clickable').on('click',function(){
                 var libname = $(this).data('name');

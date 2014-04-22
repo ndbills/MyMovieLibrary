@@ -5,9 +5,11 @@
             <h3>{{ library.name ~ ' ' ~ library.unit }} Library </h3>
         </div>
         <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default add-movie" data-toggle="modal" data-target="#addMovie-form">Add Movie</button>
+            <button type="button" class="btn btn-default add-movie" style="margin-top:10px" data-toggle="modal" data-target="#addMovie-form">Add Movie</button>
         </div>
-        <table class="table table-striped table-hover">
+        <div class="full_width" style="margin-top:4em;">
+        <div class="dataTables_wrapper" role="grid">
+        <table id="lib" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <td>Movie</td>
@@ -80,85 +82,99 @@
                 {% endif %}
             </tbody>
         </table>
+        </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        $(function(){
-            var libraryPath = '{{ url_for("libraryItem", name=library.name, index="999") }}';
-            $('.clickable').on('click',function(){
-                var movie_id = $(this).data('id');
-                window.document.location = libraryPath.replace('999',movie_id);
-            });
-
-            var removePath = '{{ url_for("removelibraryItem", name=library.name) }}';
-            $('.remove-movie').on('click',function(event){
-                var movie_id = $(this).data('id');
-                {% if library.name == 'Master' %}
-                   var message = "Removing a movie from your Master list will remove it from all other lists. Are you sure you want remove this movie? ";
-                {% else %}
-                    var message = "Are you sure you want remove this movie? ";
-                {% endif %}
-                if(confirm(message)){
-                    event.stopPropagation();
-                    event.preventDefault();
-                    $.ajax({
-                        url: removePath,
-                        data: {id:movie_id},
-                        method: 'POST',
-                        success: function(data,status,jqXHR){
-                            if(data['response'] == 'success'){
-                                if(data['type'] == 'redirect'){
-                                    window.document.location = data['path'];
-                                } else if (data['type'] == 'reload') {
-                                    window.document.location.reload();
-                                }
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            response = jqXHR.responseJSON;
-                            if('message' in response){
-                                alert(response['message']);
-                            }
-                        }
-                    });
-
-                }
-            });
-
-            var returnPath = '{{ url_for("returnMovie") }}';
-            $('.return-movie').on('click',function(event){
-                var movie_id = $(this).data('id');
-                var message = "Are you sure you want return this movie? ";
-                if(confirm(message)){
-                    event.stopPropagation();
-                    event.preventDefault();
-                    $.ajax({
-                        url: returnPath,
-                        data: {id:movie_id},
-                        method: 'POST',
-                        success: function(data,status,jqXHR){
-                            if(data['response'] == 'success'){
-                                if(data['type'] == 'redirect'){
-                                    window.document.location = data['path'];
-                                } else if (data['type'] == 'reload') {
-                                    window.document.location.reload();
-                                }
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            response = jqXHR.responseJSON;
-                            if('message' in response){
-                                alert(response['message']);
-                            }
-                        }
-                    });
-
-                }
-            });
+    <script src="{{ url_for('static', filename='lib/jquery.dataTables.min.js') }}"></script>
+<script>
+    $(function () {
+        {% if library.collection|length  > 0 %}
+        $('#lib').dataTable({
+            "sDom": '<"#search-control.pull-right"f>rt<"pull-right"p><"clear">',
+            "bJQueryUI": true,
+            "sPaginationType": "bootstrap",
         });
-    </script>
+        {% endif %}
+        var libraryPath = '{{ url_for("libraryItem", name=library.name, index="999") }}';
+        $('.clickable').on('click', function () {
+            var movie_id = $(this).data('id');
+            window.document.location = libraryPath.replace('999', movie_id);
+        });
+
+        var removePath = '{{ url_for("removelibraryItem", name=library.name) }}';
+        $('.remove-movie').on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            var movie_id = $(this).data('id'); 
+            {% if library.name == 'Master' %}
+            var message = "Removing a movie from your Master list will remove it from all other lists. Are you sure you want remove this movie? "; 
+            {% else %}
+            var message = "Are you sure you want remove this movie? "; 
+            {% endif %}
+            if (confirm(message)) {
+                $.ajax({
+                    url: removePath,
+                    data: {
+                        id: movie_id
+                    },
+                    method: 'POST',
+                    success: function (data, status, jqXHR) {
+                        if (data['response'] == 'success') {
+                            if (data['type'] == 'redirect') {
+                                window.document.location = data['path'];
+                            } else if (data['type'] == 'reload') {
+                                window.document.location.reload();
+                            }
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        response = jqXHR.responseJSON;
+                        if ('message' in response) {
+                            alert(response['message']);
+                        }
+                    }
+                });
+
+            }
+        });
+
+        var returnPath = '{{ url_for("returnMovie") }}';
+        $('.return-movie').on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            var movie_id = $(this).data('id');
+            var message = "Are you sure you want return this movie? ";
+            if (confirm(message)) {
+                $.ajax({
+                    url: returnPath,
+                    data: {
+                        id: movie_id
+                    },
+                    method: 'POST',
+                    success: function (data, status, jqXHR) {
+                        if (data['response'] == 'success') {
+                            if (data['type'] == 'redirect') {
+                                window.document.location = data['path'];
+                            } else if (data['type'] == 'reload') {
+                                window.document.location.reload();
+                            }
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        response = jqXHR.responseJSON;
+                        if ('message' in response) {
+                            alert(response['message']);
+                        }
+                    }
+                });
+
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% block modals %}
