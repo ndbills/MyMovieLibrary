@@ -5,8 +5,14 @@ from flask.ext.wtf import Form, TextField, validators
 
 
 @app.route('/movies')
-def movies():
-	return render_template('movies/master.html')
+@security('user')
+def movies(user=None):
+	from project.model.Movie import Movie
+	from project.model.Library import Library
+	library = Library.objects(user=user,name="Master",unit='Movie').first()
+	if not library:
+		return render_template('404.html',message='Unable to find given Library',user=user),404
+	return render_template('library/library.html',library=library,user=user)
 
 @app.route('/movies/<movieId>')
 def movie_item(movieId):

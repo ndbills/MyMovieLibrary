@@ -13,7 +13,6 @@ def loaned(user=None):
 def reminderEmail(user=None):
 	import smtplib
 	from_addr = user.email
-	to_addr = request.form['email']
 	subject = request.form['subject'] or "Movie Return Reminder"
 	movie_id = request.form['movie']
 	if not movie_id:
@@ -25,7 +24,9 @@ def reminderEmail(user=None):
 	loan = movie.getLoan(user)
 	if not loan:
 		return jsonify(response='error',message='Invalid Movie given'),404
-	message = request.form['message'] or "The movie %s, borrowed form %s is due on %s" % (movie.title, user.email, loan.expected_return_date)
+	to_addr = loan.borrower_email
+
+	message = request.form['message'] or "The movie %s, that you borrowed from %s has asked that you return the movie by %s" % (movie.title, user.email, loan.expected_return_date.strftime('%m-%d-%Y'))
 	login = app.config['SMTP_USER']
 	password = app.config['SMTP_PASSWORD']
 	smtpserver= app.config['SMTP_SERVER']

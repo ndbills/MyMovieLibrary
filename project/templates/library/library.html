@@ -32,8 +32,10 @@
                               {% if loan == None %}  
                                 <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ movie.id }}'>Lend</button>
                               {% else %}  
-                                This movie is loaned to {{ loan.email }} and is due back on {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
+                                Loaned to: {{ loan.borrower_email }}<br/>
+                                Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
                                 <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ movie.id }}'>Return</button>
+                                <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ movie.id }}'>Reminder</button>
                               {% endif %}
                               {% if library.name != "Master" or loan == None %}
                                 <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
@@ -43,7 +45,7 @@
                         <td>
                             <div class='rating-text'style="">{{ movie.popularity }}</div>
                             <div class="rating">
-                                {% set rating = 10 - movie.popularity|int %}
+                                {% set rating = 10 - movie.popularity|round %}
                                 {% for i in range(10) %}
                                     {% if rating == i %}
                                         <span class="vert rated">☆</span>
@@ -61,8 +63,10 @@
                               {% if loan == None %}    
                                   <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ movie.id }}'>Lend</button>
                               {% else %}  
-                                This movie is loaned to {{ loan.borrower_email }} and is due back on {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
+                                Loaned to: {{ loan.borrower_email }}<br/>
+                                Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
                                 <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ movie.id }}'>Return</button>
+                                 <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ movie.id }}'>Reminder</button>
                               {% endif %}
                               {% if library.name != "Master" or loan == None %}
                                 <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
@@ -160,4 +164,5 @@
 {% block modals %}
     {% include 'library/addmovie_modal.html' %}
     {% include 'library/loanMovie_modal.html' %}
+    {% include 'library/reminder_modal.html' %}
 {% endblock %}
