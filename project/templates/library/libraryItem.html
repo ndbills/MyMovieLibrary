@@ -13,6 +13,7 @@
                                 Loaned to: {{ loan.borrower_email }}<br/>
                                 Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}
                                 <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ item.id }}'>Return</button>
+                                <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ item.id }}'>Reminder</button>
                               {% endif %}
                               {% if library.name != "Master" or loan == None %}
                                 <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ index }}'>Remove</button>
