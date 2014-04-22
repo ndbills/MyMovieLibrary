@@ -13,7 +13,6 @@
             <thead>
                 <tr>
                     <td>Library</td>
-                    <td>Summary</td>
                     <td>Movie Count</td>
                     <td>Options</td>
                 </tr>
@@ -23,9 +22,6 @@
                 <tr class='clickable' data-name='{{ library.name }}'>
                     <td>
                         <a href="#">{{ library.name }}</a>
-                    </td>
-                    <td>
-                        {{ library.summary }}
                     </td>
                     <td>
                         {{ library.collection|length }}
