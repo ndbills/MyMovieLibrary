@@ -5,6 +5,8 @@ This project aims to solve the problem that many a movie collector faces with a 
 
 The idea is to create a responsive front-end that consumes a RESTful web service that we will create. Users will be able to create a profile, add their movies (or select movies if they already exist in the DB), and create collections (favorites, etc.).
 
+The wiki can be found [here](https://github.com/ndbills/MyMovieLibrary/wiki)
+
 #Features of this project include:
 
 * User Login
