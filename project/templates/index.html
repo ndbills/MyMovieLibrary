@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
     <head>
-        
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,21 +51,37 @@
                     {% block content %}{% endblock %}
                 </div>
 
-            <div id="push"></div>
-            </div>
-        </div>
+                <div id="push"></div>
+
+            </div><!-- end container -->
+        </div><!-- end page -->
+
+        <!-- Begin the footer -->
         <div id="footer">
-            <div class="content">
+            <div class="container">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        Open Source by Brian Wood & Nathan Bills, 2014
+                        <div class="row text-muted">
+                            <div class="col-lg-6 col-md-5 col-sm-12">
+                                <p>&copy; 2014 by Brian Wood &amp; Nathan Bills</p>
+                                <p>This work is licensed under the <a class="text-muted" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2</a></p>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-12">
+                                <a href="https://www.themoviedb.org/"><img src="https://d3a8mw37cqal2z.cloudfront.net/assets/619c6e3db1177d51/images/tmdb-logo.png" style="width:180px;"></a>
+                            </div>
+                            <div class="col-md-3 col-sm-12">
+                                <p>This product uses the TMDb API but is not endorsed or certified by TMDb.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div><!-- end footer -->
+
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
+
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="{{ url_for('static', filename='lib/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/jquery-ui-1.10.4.custom.min.js') }}"></script>
