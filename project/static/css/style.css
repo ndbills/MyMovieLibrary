@@ -2,6 +2,10 @@ html,body {
     height: 100%;
 }
 
+#homepage-responsive-image {
+  width: 100%;
+}
+
 #wrap {
     min-height: 100%;
     height: auto !important;
