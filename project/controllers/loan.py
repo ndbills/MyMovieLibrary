@@ -8,7 +8,7 @@ from flask.ext.wtf import Form, TextField, validators
 def loaned(user=None):
 	from project.model.Movie import Movie
 	from project.model.Library import Library
-	library = Library.objects(user=user,name="Borrowed",unit='Movie').first()
+	library = Library.objects(user=user,name="Loaned",unit='Movie').first()
 	if not library:
 		return render_template('404.html',message='Unable to find given Library',user=user),404
 	return render_template('library/library.html',library=library,user=user)
