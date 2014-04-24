@@ -57,6 +57,8 @@ def createLoan(user=None):
 	movie_id = request.form['movie']
 	if return_date:
 		return_date = datetime.strptime(return_date, '%m/%d/%Y')
+		if return_date <= datetime.now():
+			return jsonify(response='error',message='Return date must be in the future'),404
 	
 	if not movie_id:
 		return jsonify(response='error',message='Invalid Movie given'),404

@@ -35,6 +35,11 @@
         $(function(){
             var $form = $(document.getElementById("{{ self.form_id() }}"));
             var $acceptButton = $(document.getElementById("{{ self.form_id() }}-accept"));
+            jQuery.validator.addMethod("greaterThanToday", function(value, element, params) {
+                        if (!/Invalid|NaN/.test(new Date(value))) {
+                            return new Date(value) > new Date();
+                        }
+                    },'Must be a future date');
             $acceptButton.on('click',function(event){
                 event.stopPropagation();
                 event.preventDefault();

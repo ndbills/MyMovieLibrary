@@ -30,7 +30,10 @@ rules: {
 		required: true,
 		email: true
 	},
-	date: "required",
+	date: {
+		required: true,
+		greaterThanToday: true
+	},
 	movie: "required"
 }
 {% endblock %} 
