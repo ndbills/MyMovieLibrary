@@ -30,7 +30,7 @@ def removeLibrary(user = None):
 	library = Library.objects(user=user,unit='Movie',name=name).first()
 	if not library:
 		return jsonify(response='error',message='Library requested does not exists'),404
-	if library.name == 'Master' or library.name == 'Borrowed':
+	if library.name == 'Master' or library.name == 'Loaned':
 		return jsonify(response='error',message='Library %s cannot be deleted' % library.name),404
 	library.delete()
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))	
@@ -54,7 +54,7 @@ def libraryItem(name, index,user=None):
 	movie = library.hydrateUnit(index-1)
 	if not movie:
 		return render_template('404.html',message='Unable to find given Movie',user=user),404
-	return render_template('library/libraryItem.html',item=movie,user=user)
+	return render_template('library/libraryItem.html',item=movie,user=user,library=library,index=index)
 
 @app.route('/libraries/<name>/remove', methods=['POST'])
 @security('user')
@@ -110,7 +110,7 @@ def addlibraryItem(name,user=None):
 	movie = Movie.convertMovie(movie)	
 	library.addUnit(movie)
 	if library.name != 'Master':
-			master = Library(user=user,name="Master",unit='Movie').first()
+			master = Library.objects(user=user,name="Master",unit='Movie').first()
 			master.addUnit(movie)
 
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='library',name=name,_external=True))

@@ -37,7 +37,7 @@ def signup():
 		user.addRole('user').save()
 		session['user'] = user.toJSON()
 		Library(user=user, unit='Movie', name='Master').save()
-		Library(user=user, unit='Movie', name='Borrowed').save()
+		Library(user=user, unit='Movie', name='Loaned').save()
 		return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))
 
 @app.route('/logout', methods=['GET', 'POST'])

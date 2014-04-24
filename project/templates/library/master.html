@@ -1,92 +1,98 @@
 {% extends "usernav.html" %}
 {% block content %}
-    <div class="col-sm-12">
-        <div class="col-md-4">
-            <h3>My Libraries</h3>
-        </div>
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default add-movie" data-toggle="modal" data-target="#addLibrary-form">Add Library</button>
-        </div>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <td>Library</td>
-                    <td>Summary</td>
-                    <td>Movie Count</td>
-                    <td>Options</td>
-                </tr>
-            </thead>
-            <tbody>
-            {% for library in libraries %}
-                <tr class='clickable' data-name='{{ library.name }}'>
-                    <td>
-                        <a href="#">{{ library.name }}</a>
-                    </td>
-                    <td>
-                        {{ library.summary }}
-                    </td>
-                    <td>
-                        {{ library.collection|length }}
-                    </td>
-                    <td>
-                        {% if library.name != 'Master' and library.name != 'Borrowed' %}
-                        <button type="button" class="btn btn-default btn-small remove-library" data-name='{{ library.name }}'>Delete</button>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+	<div class="col-sm-12">
+		<div class="col-md-4">
+			<h3>My Libraries</h3>
+		</div>
+		<div class="btn-group pull-right">
+			<button type="button" class="btn btn-default add-movie" data-toggle="modal" data-target="#addLibrary-form">Add Library</button>
+		</div>
+		<div class="full_width" style="margin-top:4em;">
+			<div class="dataTables_wrapper" role="grid">
+				<table id="lib" style="margin-top:4em;" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<td>Library</td>
+							<td>Movie Count</td>
+							<td>Options</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for library in libraries if not library.name == 'Loaned' %}
+							<tr class='clickable' data-name='{{ library.name }}'>
+								<td>
+									<a href="#">{{ library.name }}</a>
+								</td>
+								<td>
+									{{ library.collection|length }}
+								</td>
+								<td>
+									{% if library.name != 'Master' and library.name != 'Loaned' %}
+										<button type="button" class="btn btn-default btn-small remove-library" data-name='{{ library.name }}'>Delete</button>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block modals %}
-    {% include 'library/addlibrary_modal.html' %}
+	{% include 'library/addlibrary_modal.html' %}
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        $(function(){
-            var libraryPath = '{{ url_for('library', name='__lib__') }}';
-            $('.clickable').on('click',function(){
-                var libname = $(this).data('name');
-                window.document.location = libraryPath.replace('__lib__',libname);
-            });
+	<script src="{{ url_for('static', filename='lib/jquery.dataTables.min.js') }}"></script>
+	<script>
+		$(function(){
+			$('#lib').dataTable({
+				"sDom": '<"#search-control.pull-right"f>rt<"pull-right"p><"clear">',
+				"bJQueryUI": true,
+				"sPaginationType": "bootstrap",
+				"sEmptyTable": false
+			});
+			var libraryPath = '{{ url_for('library', name='__lib__') }}';
+			$('.clickable').on('click',function(){
+				var libname = $(this).data('name');
+				window.document.location = libraryPath.replace('__lib__',libname);
+			});
 
-            var removePath = '{{ url_for("removeLibrary") }}';
-            $('.remove-library').on('click',function(event){
-                event.stopPropagation();
-                event.preventDefault();
-                var library_name = $(this).data('name');
-                var message = "Are you sure you want to delete this Library?";
-                if(library_name == "Master" || library_name == "Borrowed"){
-                    alert("You cannot delete the "+library_name+" library.");
-                    return false;
-                }
-                if(confirm(message)){
-                    $.ajax({
-                        url: removePath,
-                        data: {name:library_name},
-                        method: 'POST',
-                        success: function(data,status,jqXHR){
-                            if(data['response'] == 'success'){
-                                if(data['type'] == 'redirect'){
-                                    window.document.location = data['path'];
-                                } else if (data['type'] == 'reload') {
-                                    window.document.location.reload();
-                                }
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            response = jqXHR.responseJSON;
-                            if('message' in response){
-                                alert(response['message']);
-                            }
-                        }
-                    });
-
-                }
-            });
-        });
-    </script>
+			var removePath = '{{ url_for("removeLibrary") }}';
+			$('.remove-library').on('click',function(event){
+				event.stopPropagation();
+				event.preventDefault();
+				var library_name = $(this).data('name');
+				var message = "Are you sure you want to delete this Library?";
+				if(library_name == "Master" || library_name == "Loaned"){
+					alert("You cannot delete the "+library_name+" library.");
+					return false;
+				}
+				if(confirm(message)){
+					$.ajax({
+						url: removePath,
+						data: {name:library_name},
+						method: 'POST',
+						success: function(data,status,jqXHR){
+							if(data['response'] == 'success'){
+								if(data['type'] == 'redirect'){
+									window.document.location = data['path'];
+								} else if (data['type'] == 'reload') {
+									window.document.location.reload();
+								}
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown){
+							response = jqXHR.responseJSON;
+							if('message' in response){
+								alert(response['message']);
+							}
+						}
+					});
+				}
+			});
+		});
+	</script>
 {% endblock %}

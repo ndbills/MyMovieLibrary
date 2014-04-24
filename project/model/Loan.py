@@ -12,7 +12,7 @@ class Loan(db.Document):
 
 	@staticmethod
 	def create(user,movie,email,expected_return_date=None):
-		info = Loan(user=user,movie=movie,email=email)
+		info = Loan(user=user,movie=movie,borrower_email=email)
 		if expected_return_date:
 			info.expected_return_date = expected_return_date
 		else:

@@ -6,6 +6,8 @@ class Movie(db.Document):
 	title = db.StringField(max_length=255, required=True)
 	summary = db.StringField(max_length=10000, required=True)
 	tags = db.ListField(db.StringField(max_length=50))
+	cast = db.ListField(db.StringField())
+	director = db.StringField()
 	tmdb_id = db.IntField()
 	runtime = db.IntField()
 	poster = db.StringField()
@@ -19,7 +21,12 @@ class Movie(db.Document):
 	def removeTag(self,tag):
 		if tag in self.tags:
 			self.tags.remove(tag)
-		return self    
+		return self
+
+	def getLoan(self,user):
+		from Loan import Loan
+		loan = Loan.objects(movie=self,user=user).first()
+		return loan
 
 	def __str__(self):
 		return self.title
@@ -42,13 +49,21 @@ class Movie(db.Document):
 			if len(sizes) > 0:
 				medium = int(len(sizes)/2)
 				result.poster = str(movie.poster.geturl(sizes[medium]))
-		result.popularity = float(movie.popularity)
+		result.popularity = float(movie.userrating)
 		result.runtime = int(movie.runtime)
 		tags = movie.keywords
 		for tag in tags:
-			result.addTag(str(tag))
+			result.addTag(str(tag.name.encode('utf-8')))
 		genres = movie.genres
 		for genre in genres:
-			result.addTag(str(genre))
+			result.addTag(str(genre.name.encode('utf-8')))
+		cast = movie.cast
+		for actor in cast:
+			result.cast.append("%s:%s" % (actor.name,actor.character))	
+		crew = movie.crew
+		for person in crew:
+			job = person.job.encode('utf-8')
+			if 'director' == job.lower():
+				result.director = person.name.encode('utf-8')
 		result.save()
 		return result

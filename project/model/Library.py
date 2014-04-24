@@ -7,8 +7,7 @@ class Library(db.Document):
 	name = db.StringField(max_length=100, unique_with=['user','unit']) #name of the Library
 	lookup_attribute = db.StringField(default='id')
 	collection = db.ListField(db.StringField())
-	summary = db.StringField()
-
+	
 	def addUnit(self,unit):
 		if self.unit == type(unit).__name__:
 			value = str(unit[self.lookup_attribute])
