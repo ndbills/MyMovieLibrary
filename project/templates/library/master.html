@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for library in libraries if not library.name == 'Borrowed' %}
+            {% for library in libraries if not library.name == 'Loaned' %}
                 <tr class='clickable' data-name='{{ library.name }}'>
                     <td>
                         <a href="#">{{ library.name }}</a>
@@ -27,7 +27,7 @@
                         {{ library.collection|length }}
                     </td>
                     <td>
-                        {% if library.name != 'Master' and library.name != 'Borrowed' %}
+                        {% if library.name != 'Master' and library.name != 'Loaned' %}
                         <button type="button" class="btn btn-default btn-small remove-library" data-name='{{ library.name }}'>Delete</button>
                         {% endif %}
                     </td>
@@ -66,7 +66,7 @@
                 event.preventDefault();
                 var library_name = $(this).data('name');
                 var message = "Are you sure you want to delete this Library?";
-                if(library_name == "Master" || library_name == "Borrowed"){
+                if(library_name == "Master" || library_name == "Loaned"){
                     alert("You cannot delete the "+library_name+" library.");
                     return false;
                 }

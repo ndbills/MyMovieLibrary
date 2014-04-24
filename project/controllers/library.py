@@ -30,7 +30,7 @@ def removeLibrary(user = None):
 	library = Library.objects(user=user,unit='Movie',name=name).first()
 	if not library:
 		return jsonify(response='error',message='Library requested does not exists'),404
-	if library.name == 'Master' or library.name == 'Borrowed':
+	if library.name == 'Master' or library.name == 'Loaned':
 		return jsonify(response='error',message='Library %s cannot be deleted' % library.name),404
 	library.delete()
 	return jsonify(response='success',type='redirect',path=url_for(endpoint='libraries',_external=True))	

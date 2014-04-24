@@ -74,7 +74,7 @@ def createLoan(user=None):
 
 	loan = Loan.create(user,movie,borrower,return_date)
 	from project.model.Library import Library
-	borrowed_lib = Library.objects(user=user,unit="Movie",name="Borrowed").first()
+	borrowed_lib = Library.objects(user=user,unit="Movie",name="Loaned").first()
 	borrowed_lib.addUnit(movie)
 
 	return jsonify(response='success',type="reload")
@@ -97,7 +97,7 @@ def returnMovie(user=None):
 		return jsonify(response='error',message='This movie has not been loaned out and cannot be returned'),404	
 
 	from project.model.Library import Library
-	borrowed_lib = Library.objects(user=user,unit="Movie",name="Borrowed").first()
+	borrowed_lib = Library.objects(user=user,unit="Movie",name="Loaned").first()
 	borrowed_lib.removeUnit(movie)
 	loan.delete()
 

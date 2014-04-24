@@ -39,7 +39,7 @@
                                 <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ movie.id }}'>Return</button>
                                 <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ movie.id }}'>Reminder</button>
                               {% endif %}
-                              {% if (library.name != "Master" and library.name != "Borrowed") or loan == None %}
+                              {% if (library.name != "Master" and library.name != "Loaned") or loan == None %}
                                 <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
                               {% endif %}
                             </div>
@@ -70,7 +70,7 @@
                                 <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ movie.id }}'>Return</button>
                                  <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ movie.id }}'>Reminder</button>
                               {% endif %}
-                              {% if (library.name != "Master" and library.name != "Borrowed") or loan == None %}
+                              {% if (library.name != "Master" and library.name != "Loaned") or loan == None %}
                                 <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ loop.index }}'>Remove</button>
                               {% endif %}
                               
