@@ -4,25 +4,24 @@
     <div class="col-sm-12">
         <div class="row">
             <div class="col-xs-12 col-sm-3 col-md-3" style="margin-bottom:20px">
-                <img src="{{ item.poster }}" style="max-width: 180px;" alt="{{ item.title }}">
                 <h3>{{ item.title }}</h3>
+                <img src="{{ item.poster }}" style="max-width: 180px; margin-bottom: 15px;" alt="{{ item.title }}">
                 {% if loan != None %}
-                Loaned to: {{ loan.borrower_email }}<br/>
-                Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}  
+                    Loaned to: {{ loan.borrower_email }}<br/>
+                    Due back: {{ loan.expected_return_date.strftime('%m-%d-%Y') }}  
                 {% endif %}
                 <div class="btn-group">
-                              {% if loan == None %}    
-                                  <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ item.id }}'>Lend</button>
-                              {% else %}  
-                                <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ item.id }}'>Return</button>
-                                <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ item.id }}'>Reminder</button>
-                              {% endif %}
+                    {% if loan == None %}    
+                        <button type="button" class="btn btn-default btn-small lend-movie" data-toggle="modal" data-target="#loan-form" data-id='{{ item.id }}'>Lend</button>
+                    {% else %}  
+                        <button type="button" class="btn btn-default btn-small return-movie" data-toggle="modal" data-target="#return-form" data-id='{{ item.id }}'>Return</button>
+                        <button type="button" class="btn btn-default btn-small reminder" data-toggle="modal" data-target="#reminder-form" data-id='{{ item.id }}'>Reminder</button>
+                    {% endif %}
 
-                              {% if library.name != "Master" or loan == None %}
-                                <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ index }}'>Remove</button>
-                              {% endif %}
-                              
-                            </div>
+                    {% if library.name != "Master" or loan == None %}
+                        <button type="button" class="btn btn-default btn-small remove-movie" data-id='{{ index }}'>Remove</button>
+                    {% endif %}
+                </div>
             </div>
             <div class="col-md-1 hidden-sm">
                 <div class="rating-text">{{ item.popularity }}</div>
@@ -39,17 +38,16 @@
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 well">
                 <dl>
-                  <dt>Director</dt>
+                    <dt>Director</dt>
                     <dd>{{ item.director|default('No Director found')}}</dd>
-                  <dt>Actors:</dt>
+                    <dt>Actors:</dt>
                     <dd>&nbsp;</dd>  
-                {% for data in item.cast %}
-                {% set actor = data.split(':')[0]|default('&nbsp;') %}
-                {% set character = data.split(':')[1]|default('&nbsp;') %}
-                    <dt>{{ actor }}</dt>
+                    {% for data in item.cast %}
+                        {% set actor = data.split(':')[0]|default('&nbsp;') %}
+                        {% set character = data.split(':')[1]|default('&nbsp;') %}
+                        <dt>{{ actor }}</dt>
                         <dd>{{ character }}</dd>
-                {% endfor %}
-                  
+                    {% endfor %}
                 </dl>
             </div>
 
@@ -95,7 +93,6 @@
                             }
                         }
                     });
-
                 }
             });
 
@@ -126,7 +123,6 @@
                             }
                         }
                     });
-
                 }
             });
         });
